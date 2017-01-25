@@ -13,6 +13,8 @@ namespace WeFiBox.Web.Controllers
 
         public long Size { get; set; }
 
+        public string PublicUrl { get; set; }
+
         public DateTime UploadDate { get; set; }
     }
 
@@ -38,6 +40,7 @@ namespace WeFiBox.Web.Controllers
             var fileListEntries = images.Select(image => new FileInfo(image)).Select(fileInfo => new FileListEntry
             {
                 Name = fileInfo.Name,
+                PublicUrl = $"/uploads/{fileInfo.Name}",
                 Size = fileInfo.Length,
                 UploadDate = fileInfo.LastWriteTime //??
             }).ToList();

@@ -5,21 +5,23 @@
     Layout = "_Layout";
 }
 
-<h2>Datei-Liste</h2>
+<h2>@ViewData["Title"]</h2>
 
 <table class="table table-bordered">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>Größe</th>
-            <th>Datum</th>
-        </tr>
+    <tr>
+        <th>Bild</th>
+        <th>Name</th>
+        <th>Größe</th>
+        <th>Datum</th>
+    </tr>
     </thead>
     <tbody>
         @{
             foreach (var fileListEntry in Model)
             {
                 <tr>
+                    <td><img width="200" src="@fileListEntry.PublicUrl"/></td>
                     <td>@fileListEntry.Name</td>
                     <td>@fileListEntry.Size</td>
                     <td>@fileListEntry.UploadDate</td>
