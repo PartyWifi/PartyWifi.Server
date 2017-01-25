@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Hochladen";
+}
+<h2>@ViewData["Title"]</h2>
+
+Bitte wählen Sie ihre Bilder die Sie dem Brautpaar zur verfügung stellen möchten. Ihr Bild wird in einigen Sekunden auf dem Beamer dargestellt.
+
+<form method="post" asp-action="Index" asp-controller="Upload" enctype="multipart/form-data">
+    <input type="file" name="files" multiple />
+    <input type="submit" value="Upload" />
+</form>

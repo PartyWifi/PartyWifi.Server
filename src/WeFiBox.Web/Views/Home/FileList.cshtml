@@ -1,0 +1,30 @@
+﻿@model List<WeFiBox.Web.Controllers.FileListEntry>
+
+@{
+    ViewBag.Title = "Datei-Liste";
+    Layout = "_Layout";
+}
+
+<h2>Datei-Liste</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Größe</th>
+            <th>Datum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var fileListEntry in Model)
+            {
+                <tr>
+                    <td>@fileListEntry.Name</td>
+                    <td>@fileListEntry.Size</td>
+                    <td>@fileListEntry.UploadDate</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
