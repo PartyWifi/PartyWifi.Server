@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,11 +32,25 @@ namespace WeFiBox.Web.Controllers
                 if (file.Length <= 0)
                     continue;
 
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                var fileName = $"{Guid.NewGuid()}.jpg";
                 var filePath = Path.Combine(uploads, fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
+                
+                using (var memoryStream = new MemoryStream())
+                 {
+                    await file.CopyToAsync(memoryStream);
+
+
+                    using (var image = new MagickImage(memoryStream))
+                    {
+                        if (image.BaseWidth > 1280)
+                        {
+                            var size = new MagickGeometry(1280, 1024);
+                            image.Resize(size);
+                        }
+
+                        // Save frame as jpg
+                        image.Write(filePath);
+                    }
                 }
             }
 
