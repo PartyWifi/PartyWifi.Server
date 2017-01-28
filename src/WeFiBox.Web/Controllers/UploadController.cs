@@ -39,7 +39,6 @@ namespace WeFiBox.Web.Controllers
                  {
                     await file.CopyToAsync(memoryStream);
 
-
                     using (var image = new MagickImage(memoryStream))
                     {
                         if (image.BaseWidth > 1280)
