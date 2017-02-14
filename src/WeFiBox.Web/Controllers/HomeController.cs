@@ -37,13 +37,15 @@ namespace WeFiBox.Web.Controllers
             var uploadsDir = Path.Combine(_environment.WebRootPath, "uploads");
             var images = Directory.GetFiles(uploadsDir, "*.jpg");
 
-            var fileListEntries = images.Select(image => new FileInfo(image)).Select(fileInfo => new FileListEntry
-            {
-                Name = fileInfo.Name,
-                PublicUrl = $"/uploads/{fileInfo.Name}",
-                Size = fileInfo.Length,
-                UploadDate = fileInfo.LastWriteTime //??
-            }).ToList();
+            var fileListEntries = (from image in images
+                                   let fileInfo = new FileInfo(image)
+                                   select new FileListEntry
+                                   {
+                                       Name = fileInfo.Name,
+                                       PublicUrl = $"/uploads/{fileInfo.Name}",
+                                       Size = fileInfo.Length,
+                                       UploadDate = fileInfo.LastWriteTime //??
+                                   }).ToList();
 
             return View(fileListEntries);
         }

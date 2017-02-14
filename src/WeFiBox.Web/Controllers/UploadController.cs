@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
@@ -11,11 +12,13 @@ namespace WeFiBox.Web.Controllers
 {
     public class UploadController : Controller
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly string _uploads;
+        private readonly string _resized;
 
         public UploadController(IHostingEnvironment environment)
         {
-            _environment = environment;
+            _uploads = Path.Combine(environment.WebRootPath, "uploads");
+            _resized = Path.Combine(environment.WebRootPath, "compressed");
         }
 
         public IActionResult Index()
@@ -26,20 +29,25 @@ namespace WeFiBox.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(ICollection<IFormFile> files)
         {
-            var uploads = Path.Combine(_environment.WebRootPath, "uploads");
-            foreach (var file in files)
+            foreach (var file in files.Where(file => file.Length > 0))
             {
-                if (file.Length <= 0)
-                    continue;
-
-                var fileName = $"{Guid.NewGuid()}.jpg";
-                var filePath = Path.Combine(uploads, fileName);
-                
-                using (var memoryStream = new MemoryStream())
+                 using (var memoryStream = new MemoryStream())
                  {
+                    // Copy to memory first
                     await file.CopyToAsync(memoryStream);
 
+                    // File name for time sorting
+                    var fileName = $"{DateTime.Now.ToString("yyyyMMdd-hhmmss")}.jpg";
 
+                    // Copy to filesystem for later
+                    var filePath = Path.Combine(_uploads, fileName);
+                    using(var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await memoryStream.CopyToAsync(fileStream);
+                        fileStream.Flush();
+                    }   
+                    
+                    // Resize for the slide-show
                     using (var image = new MagickImage(memoryStream))
                     {
                         if (image.BaseWidth > 1280)
@@ -49,6 +57,7 @@ namespace WeFiBox.Web.Controllers
                         }
 
                         // Save frame as jpg
+                        filePath = Path.Combine(_resized, fileName);
                         image.Write(filePath);
                     }
                 }
