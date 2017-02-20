@@ -35,6 +35,7 @@ namespace WeFiBox.Web.Controllers
                  {
                     // Copy to memory first
                     await file.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
 
                     // File name for time sorting
                     var fileName = $"{DateTime.Now.ToString("yyyyMMdd-hhmmss")}.jpg";
@@ -45,12 +46,13 @@ namespace WeFiBox.Web.Controllers
                     {
                         await memoryStream.CopyToAsync(fileStream);
                         fileStream.Flush();
+                        memoryStream.Position = 0;
                     }   
                     
                     // Resize for the slide-show
                     using(var image = new Image(memoryStream))
                     {
-                        if(image.Width >= 1920 && image.Height <= 1080)
+                        if(image.Width <= 1920 && image.Height <= 1080)
                           continue;
 
                         filePath = Path.Combine(_resized, fileName);
