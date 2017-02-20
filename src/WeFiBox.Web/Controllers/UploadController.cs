@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ImageSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,17 +48,14 @@ namespace WeFiBox.Web.Controllers
                     }   
                     
                     // Resize for the slide-show
-                    using (var image = new MagickImage(memoryStream))
+                    using(var image = new Image(memoryStream))
                     {
-                        if (image.BaseWidth > 1280)
-                        {
-                            var size = new MagickGeometry(1280, 1024);
-                            image.Resize(size);
-                        }
+                        if(image.Width >= 1920 && image.Height <= 1080)
+                          continue;
 
-                        // Save frame as jpg
                         filePath = Path.Combine(_resized, fileName);
-                        image.Write(filePath);
+                        image.Resize(1920, 1080)
+                             .Save(filePath);
                     }
                 }
             }
