@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace WeFiBox.Web.Controllers
 {
@@ -20,11 +21,11 @@ namespace WeFiBox.Web.Controllers
 
     public class HomeController : Controller
     {
-        private readonly IHostingEnvironment _environment;
+        private readonly DirectoryConfigs _directories;
 
-        public HomeController(IHostingEnvironment environment)
+        public HomeController(IOptions<DirectoryConfigs> directories)
         {
-            _environment = environment;
+            _directories = directories.Value;
         }
 
         public IActionResult Index()
@@ -34,10 +35,7 @@ namespace WeFiBox.Web.Controllers
 
         public IActionResult FileList()
         {
-            var uploadsDir = Path.Combine(_environment.WebRootPath, "uploads");
-            var images = Directory.GetFiles(uploadsDir, "*.jpg");
-
-            var fileListEntries = (from image in images
+            var fileListEntries = (from image in Directory.GetFiles(_directories.UploadDir)
                                    let fileInfo = new FileInfo(image)
                                    select new FileListEntry
                                    {

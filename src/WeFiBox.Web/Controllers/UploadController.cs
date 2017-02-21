@@ -12,13 +12,11 @@ namespace WeFiBox.Web.Controllers
 {
     public class UploadController : Controller
     {
-        private readonly string _uploads;
-        private readonly string _resized;
+        private readonly DirectoryConfigs _directories;
 
         public UploadController(IOptions<DirectoryConfigs> directories)
         {
-            _uploads = directories.Value.UploadDir;
-            _resized = directories.Value.ResizedDir;
+            _directories = directories.Value;
         }
 
         public IActionResult Index()
@@ -41,7 +39,7 @@ namespace WeFiBox.Web.Controllers
                     var fileName = $"{DateTime.Now.ToString("yyyyMMdd-hhmmss")}.jpg";
 
                     // Copy to filesystem for later
-                    var filePath = Path.Combine(_uploads, fileName);
+                    var filePath = Path.Combine(_directories.UploadDir, fileName);
                     using(var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await memoryStream.CopyToAsync(fileStream);
@@ -55,7 +53,7 @@ namespace WeFiBox.Web.Controllers
                         if(image.Width <= 1920 && image.Height <= 1080)
                           continue;
 
-                        filePath = Path.Combine(_resized, fileName);
+                        filePath = Path.Combine(_directories.ResizedDir, fileName);
                         image.Resize(1920, 1080)
                              .Save(filePath);
                     }
