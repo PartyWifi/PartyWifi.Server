@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +12,11 @@ namespace WeFiBox.Web.Controllers
 {
     public class UploadController : Controller
     {
-        private readonly string _uploads;
-        private readonly string _resized;
+        private readonly DirectoryConfigs _directories;
 
-        public UploadController(IHostingEnvironment environment)
+        public UploadController(IOptions<DirectoryConfigs> directories)
         {
-            _uploads = Path.Combine(environment.WebRootPath, "uploads");
-            _resized = Path.Combine(environment.WebRootPath, "compressed");
+            _directories = directories.Value;
         }
 
         public IActionResult Index()
@@ -41,7 +39,7 @@ namespace WeFiBox.Web.Controllers
                     var fileName = $"{DateTime.Now.ToString("yyyyMMdd-hhmmss")}.jpg";
 
                     // Copy to filesystem for later
-                    var filePath = Path.Combine(_uploads, fileName);
+                    var filePath = Path.Combine(_directories.UploadDir, fileName);
                     using(var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await memoryStream.CopyToAsync(fileStream);
@@ -55,7 +53,7 @@ namespace WeFiBox.Web.Controllers
                         if(image.Width <= 1920 && image.Height <= 1080)
                           continue;
 
-                        filePath = Path.Combine(_resized, fileName);
+                        filePath = Path.Combine(_directories.ResizedDir, fileName);
                         image.Resize(1920, 1080)
                              .Save(filePath);
                     }

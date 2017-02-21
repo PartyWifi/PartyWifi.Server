@@ -32,6 +32,9 @@ namespace WeFiBox.Web
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
+            // Directories for uploaded and resized images
+            services.Configure<DirectoryConfigs>(Configuration.GetSection("Directories"));
+
             services.AddMvc();
         }
 
