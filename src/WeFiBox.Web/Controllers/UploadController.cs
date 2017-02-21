@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +15,10 @@ namespace WeFiBox.Web.Controllers
         private readonly string _uploads;
         private readonly string _resized;
 
-        public UploadController(IHostingEnvironment environment)
+        public UploadController(IOptions<DirectoryConfigs> directories)
         {
-            _uploads = Path.Combine(environment.WebRootPath, "uploads");
-            _resized = Path.Combine(environment.WebRootPath, "compressed");
+            _uploads = directories.Value.UploadDir;
+            _resized = directories.Value.ResizedDir;
         }
 
         public IActionResult Index()
