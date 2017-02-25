@@ -37,7 +37,7 @@ namespace WeFiBox.Web.Controllers
                     memoryStream.Position = 0;
 
                     // File name for time sorting
-                    var fileName = $"{DateTime.Now.ToString("yyyyMMdd-hhmmss")}.jpg";
+                    var fileName = $"{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.jpg";
 
                     // Copy to filesystem for later
                     // Append '.tmp' to exclude file from slideshow until upload was finished
