@@ -33,7 +33,7 @@ namespace WeFiBox.Web
             services.AddApplicationInsightsTelemetry(Configuration);
 
             // Directories for uploaded and resized images
-            services.Configure<DirectoryConfigs>(Configuration.GetSection("Directories"));
+            services.Configure<Settings>(Configuration.GetSection("Settings"));
 
             services.AddMvc();
         }
