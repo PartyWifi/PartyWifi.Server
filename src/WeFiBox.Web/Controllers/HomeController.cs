@@ -21,11 +21,11 @@ namespace WeFiBox.Web.Controllers
 
     public class HomeController : Controller
     {
-        private readonly DirectoryConfigs _directories;
+        private readonly Settings _settings;
 
-        public HomeController(IOptions<DirectoryConfigs> directories)
+        public HomeController(IOptions<Settings> settings)
         {
-            _directories = directories.Value;
+            _settings = settings.Value;
         }
 
         public IActionResult Index()
@@ -35,7 +35,7 @@ namespace WeFiBox.Web.Controllers
 
         public IActionResult FileList()
         {
-            var fileListEntries = (from image in Directory.GetFiles(_directories.UploadDir)
+            var fileListEntries = (from image in Directory.GetFiles(_settings.UploadDir)
                                    let fileInfo = new FileInfo(image)
                                    select new FileListEntry
                                    {

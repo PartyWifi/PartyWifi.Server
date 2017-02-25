@@ -19,11 +19,11 @@ namespace WeFiBox.Web.Controllers
 
     public class SlideshowController : Controller
     {
-        private readonly DirectoryConfigs _directories;
+        private readonly Settings _settings;
 
-        public SlideshowController(IOptions<DirectoryConfigs> directories)
+        public SlideshowController(IOptions<Settings> settings)
         {
-            _directories = directories.Value;
+            _settings = settings.Value;
         }
 
         // GET: /<controller>/
@@ -67,10 +67,10 @@ namespace WeFiBox.Web.Controllers
         public IActionResult Image(string id)
         {           
             // Check if file has a resized clone, otherwise use original
-            var filePath = Path.Combine(_directories.ResizedDir, id);
+            var filePath = Path.Combine(_settings.ResizedDir, id);
             if(!FileHelper.Exists(filePath))
             {
-                filePath = Path.Combine(_directories.UploadDir, id);
+                filePath = Path.Combine(_settings.UploadDir, id);
             }
 
             // Return file stream
@@ -83,8 +83,8 @@ namespace WeFiBox.Web.Controllers
         /// </summary>
         private string[] AllFiles()
         {
-            var files = Directory.EnumerateFiles(_directories.UploadDir);
-            if(_directories.AlphabeticalFileSystem)
+            var files = Directory.EnumerateFiles(_settings.UploadDir);
+            if(_settings.AlphabeticalFileSystem)
             {
                 files = files.OrderByDescending(f => f);
             }

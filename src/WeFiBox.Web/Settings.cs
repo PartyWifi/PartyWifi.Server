@@ -5,7 +5,7 @@ namespace WeFiBox.Web
     /// <summary>
     /// Directories of the application
     /// </summary>
-    public class DirectoryConfigs
+    public class Settings
     {
         /// <summary>
         /// Directory for the uploads in the local file system
