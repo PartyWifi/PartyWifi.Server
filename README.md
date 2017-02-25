@@ -1,7 +1,7 @@
-WeFi Server
+WeddiFi.Server
 =============
 
-Server of the **WeFi** ecosystem.
+Server of the **WeddiFi** ecosystem.
 
 # MyGet Feed
 We use [ImageSharp](https://github.com/JimBobSquarePants/ImageSharp) that requires an additional nuget feed in NuGet.Config until they reach beta stage.
