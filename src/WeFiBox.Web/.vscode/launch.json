@@ -8,14 +8,28 @@
             "preLaunchTask": "build",
             "program": "${workspaceRoot}/bin/Debug/netcoreapp1.0/WeFiBox.Web.dll",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/src/WeFiBox.Web",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
+            "launchBrowser": {
+                "enabled": false,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/Views"
+                "/Views": "${workspaceRoot}/src/WeFiBox.Web/Views"
             }
         },
         {
