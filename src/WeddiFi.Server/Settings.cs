@@ -1,9 +1,7 @@
-
-
-namespace WeFiBox.Web
+namespace WeddiFi.Server
 {
     /// <summary>
-    /// Directories of the application
+    /// Settings of the application
     /// </summary>
     public class Settings
     {
@@ -17,7 +15,6 @@ namespace WeFiBox.Web
         /// </summary>
         public string ResizedDir {get; set;}
 
-
         /// <summary>
         /// Maximum height of images
         /// </summary>
@@ -27,7 +24,6 @@ namespace WeFiBox.Web
         /// Maximum width of images
         /// </summary>
         public int MaxWidth { get; set; }
-
 
         /// <summary>
         /// Image rotation time in seconds

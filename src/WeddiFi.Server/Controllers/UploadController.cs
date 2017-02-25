@@ -1,15 +1,15 @@
-﻿using ImageSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using FileHelper = System.IO.File;
 using System.Linq;
+using FileHelper = System.IO.File;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using ImageSharp;
 
-namespace WeFiBox.Web.Controllers
+namespace WeddiFi.Server.Controllers
 {
     public class UploadController : Controller
     {
@@ -37,7 +37,7 @@ namespace WeFiBox.Web.Controllers
                     memoryStream.Position = 0;
 
                     // File name for time sorting
-                    var fileName = $"{DateTime.Now.ToString("yyyyMMdd-HHmmss")}.jpg";
+                    var fileName = $"{DateTime.Now:yyyyMMdd-HHmmss}.jpg";
 
                     // Copy to filesystem for later
                     // Append '.tmp' to exclude file from slideshow until upload was finished

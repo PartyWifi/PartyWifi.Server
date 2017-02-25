@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace WeFiBox.Web
+namespace WeddiFi.Server
 {
     public class Startup
     {
