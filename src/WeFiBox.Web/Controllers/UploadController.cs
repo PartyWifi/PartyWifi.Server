@@ -50,15 +50,19 @@ namespace WeFiBox.Web.Controllers
                     // Resize for the slide-show
                     using(var image = new Image(memoryStream))
                     {
-                        var widthScale = image.Width / 1920;
-                        var heightScale = image.Height / 1080;
+                        var widthScale = image.Width / (double) _settings.MaxWidth;
+                        var heightScale = image.Height / (double) _settings.MaxHeight;
                         
                         if(widthScale <= 1  && heightScale <= 1)
                           continue;
 
+                        // Find the dimension that needs the most adjustment and create new dimensions
+                        var scaling = widthScale > heightScale ? widthScale : heightScale;
+                        var newWidth = (int)Math.Floor(image.Width / scaling);                    
+                        var newHeight = (int)Math.Floor(image.Height / scaling);
+
                         filePath = Path.Combine(_settings.ResizedDir, fileName);
-                        image.Resize(1920, 1080)
-                             .Save(filePath);
+                        image.Resize(newWidth, newHeight).Save(filePath);
                     }
                 }
             }

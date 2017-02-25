@@ -21,5 +21,15 @@ namespace WeFiBox.Web
         /// Flag if the file system is alphabetical or requires sorting
         /// </summary>
         public bool AlphabeticalFileSystem {get; set; }
+
+        /// <summary>
+        /// Maximum height of images
+        /// </summary>
+        public int MaxHeight { get; set; }
+
+        /// <summary>
+        /// Maximum width of images
+        /// </summary>
+        public int MaxWidth { get; set; }
     }
 }
