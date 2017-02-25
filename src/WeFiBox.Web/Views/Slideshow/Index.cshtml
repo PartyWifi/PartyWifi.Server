@@ -43,12 +43,14 @@
         asp-fallback-test="window.jQuery">
 </script>
 <script type="text/javascript">
-  var id = '@Model.File';
+  var latest = '@Model.File'; // Latest picture known to client
   setInterval(function() {
-    $.get('slideshow/next/' + id, function(data){ 
-      id = data.file;
-      $('#image').attr('src', 'slideshow/image/' + id);
-    })
+    $.get('slideshow/next/' + latest, function(data){ 
+      // Show new image
+      $('#image').attr('src', 'slideshow/image/' + data.file);
+      if(data.file > latest)
+        latest = data.file; // Update latest if response is newer
+    });
   }, @Model.RotationMs);
 </script>
 </html>

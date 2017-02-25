@@ -44,9 +44,9 @@ namespace WeFiBox.Web.Controllers
         public IActionResult Next(string id)
         {
             var files = AllFiles();
-            // Find current index in all files
+            // Find current index in all files starting from the back
             var currentIndex = 0;
-            for (int index = 0; index  < files.Length; index ++)
+            for (int index = files.Length - 1; index  >= 0; index--)
             {
                 if(files[index] != id)
                     continue;
@@ -59,7 +59,7 @@ namespace WeFiBox.Web.Controllers
             if (nextIndex >= files.Length)
             {
                 var rand = new Random();
-                nextIndex = rand.Next(currentIndex);
+                nextIndex = rand.Next(files.Length);
             }
             return Json(new { file = files[nextIndex] });            
         }
@@ -86,12 +86,11 @@ namespace WeFiBox.Web.Controllers
         /// </summary>
         private string[] AllFiles()
         {
-            var files = Directory.EnumerateFiles(_settings.UploadDir);
-            if(_settings.AlphabeticalFileSystem)
-            {
-                files = files.OrderByDescending(f => f);
-            }
-            return files.Select(Path.GetFileName).ToArray();
+            return Directory
+                .EnumerateFiles(_settings.UploadDir, "*.jpg") // Get all files excluding '.tmp' files
+                .Select(Path.GetFileName) // Extract file name
+                .OrderBy(fn => fn) // Order them
+                .ToArray();
         }
     }
 }

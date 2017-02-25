@@ -17,11 +17,6 @@ namespace WeFiBox.Web
         /// </summary>
         public string ResizedDir {get; set;}
 
-        /// <summary>
-        /// Flag if the file system is alphabetical or requires sorting
-        /// </summary>
-        public bool AlphabeticalFileSystem {get; set; }
-
 
         /// <summary>
         /// Maximum height of images

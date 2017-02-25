@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FileHelper = System.IO.File;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -39,8 +40,9 @@ namespace WeFiBox.Web.Controllers
                     var fileName = $"{DateTime.Now.ToString("yyyyMMdd-hhmmss")}.jpg";
 
                     // Copy to filesystem for later
+                    // Append '.tmp' to exclude file from slideshow until upload was finished
                     var filePath = Path.Combine(_settings.UploadDir, fileName);
-                    using(var fileStream = new FileStream(filePath, FileMode.Create))
+                    using(var fileStream = new FileStream(filePath + ".tmp", FileMode.Create))
                     {
                         await memoryStream.CopyToAsync(fileStream);
                         fileStream.Flush();
@@ -48,26 +50,37 @@ namespace WeFiBox.Web.Controllers
                     }   
                     
                     // Resize for the slide-show
-                    using(var image = new Image(memoryStream))
-                    {
-                        var widthScale = image.Width / (double) _settings.MaxWidth;
-                        var heightScale = image.Height / (double) _settings.MaxHeight;
-                        
-                        if(widthScale <= 1  && heightScale <= 1)
-                          continue;
+                    ResizeIfNecessary(memoryStream, fileName);
 
-                        // Find the dimension that needs the most adjustment and create new dimensions
-                        var scaling = widthScale > heightScale ? widthScale : heightScale;
-                        var newWidth = (int)Math.Floor(image.Width / scaling);                    
-                        var newHeight = (int)Math.Floor(image.Height / scaling);
-
-                        filePath = Path.Combine(_settings.ResizedDir, fileName);
-                        image.Resize(newWidth, newHeight).Save(filePath);
-                    }
+                    // Rename file to make it accessible to slideshow
+                    FileHelper.Move(filePath + ".tmp", filePath);
                 }
             }
 
             return View();
+        }
+
+        /// <summary>
+        /// Create a resized version of the image if necessary
+        /// </summary>
+        private void ResizeIfNecessary(Stream memoryStream, string fileName)
+        {
+            using(var image = new Image(memoryStream))
+            {
+                var widthScale = image.Width / (double) _settings.MaxWidth;
+                var heightScale = image.Height / (double) _settings.MaxHeight;
+                
+                if(widthScale <= 1  && heightScale <= 1)
+                    return;
+
+                // Find the dimension that needs the most adjustment and create new dimensions
+                var scaling = widthScale > heightScale ? widthScale : heightScale;
+                var newWidth = (int)Math.Floor(image.Width / scaling);                    
+                var newHeight = (int)Math.Floor(image.Height / scaling);
+
+                var filePath = Path.Combine(_settings.ResizedDir, fileName);
+                image.Resize(newWidth, newHeight).Save(filePath);
+            }
         }
     }
 }
