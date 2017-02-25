@@ -20,10 +20,26 @@ namespace WeddiFi.Server.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
+            return View(CreateInitModel());
+        }
+
+        /// <summary>
+        /// Receive init values as json for non HTML clients
+        /// </summary>
+        public IActionResult Init()
+        {
+            return Json(CreateInitModel());
+        }
+
+        /// <summary>
+        /// Create init model for slideshow client
+        /// </summary>
+        private SlideshowInit CreateInitModel()
+        {
             var files = AllFiles();
             var latestFile = files[files.Length - 1];
 
-            return View(new SlideshowInit(latestFile, _settings.ImageRotationSec * 1000));
+            return new SlideshowInit(latestFile, _settings.ImageRotationSec * 1000);
         }
 
         /// <summary>
