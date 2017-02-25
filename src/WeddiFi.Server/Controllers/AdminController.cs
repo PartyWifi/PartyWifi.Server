@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WeFiBox.Web.Controllers
+namespace WeddiFi.Server.Controllers
 {
     public class AdminController : Controller
     {

@@ -5,20 +5,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using WeddiFi.Server.Models;
 
-namespace WeFiBox.Web.Controllers
+namespace WeddiFi.Server.Controllers
 {
-    public class FileListEntry
-    {
-        public string Name { get; set; }
-
-        public long Size { get; set; }
-
-        public string PublicUrl { get; set; }
-
-        public DateTime UploadDate { get; set; }
-    }
-
     public class HomeController : Controller
     {
         private readonly Settings _settings;

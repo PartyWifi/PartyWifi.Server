@@ -4,22 +4,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using WeddiFi.Server.Models;
 
-namespace WeFiBox.Web.Controllers
+namespace WeddiFi.Server.Controllers
 {
-    public class SlideshowInit
-    {
-        public SlideshowInit(string file, double rotationMs)
-        {
-            File = file;
-            RotationMs = (int)Math.Ceiling(rotationMs);
-        }
-
-        public string File { get; }
-
-        public int RotationMs { get; set; }
-    }
-
     public class SlideshowController : Controller
     {
         private readonly Settings _settings;
@@ -46,7 +34,7 @@ namespace WeFiBox.Web.Controllers
             var files = AllFiles();
             // Find current index in all files starting from the back
             var currentIndex = 0;
-            for (int index = files.Length - 1; index  >= 0; index--)
+            for (var index = files.Length - 1; index  >= 0; index--)
             {
                 if(files[index] != id)
                     continue;
