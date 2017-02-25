@@ -22,6 +22,7 @@ namespace WeFiBox.Web
         /// </summary>
         public bool AlphabeticalFileSystem {get; set; }
 
+
         /// <summary>
         /// Maximum height of images
         /// </summary>
@@ -31,5 +32,11 @@ namespace WeFiBox.Web
         /// Maximum width of images
         /// </summary>
         public int MaxWidth { get; set; }
+
+
+        /// <summary>
+        /// Image rotation time in seconds
+        /// </summary>
+        public double ImageRotationSec { get; set; }
     }
 }

@@ -7,14 +7,17 @@ using System;
 
 namespace WeFiBox.Web.Controllers
 {
-    public class FileId
+    public class SlideshowInit
     {
-        public FileId(string file)
+        public SlideshowInit(string file, double rotationMs)
         {
             File = file;
+            RotationMs = (int)Math.Ceiling(rotationMs);
         }
 
         public string File { get; }
+
+        public int RotationMs { get; set; }
     }
 
     public class SlideshowController : Controller
@@ -32,7 +35,7 @@ namespace WeFiBox.Web.Controllers
             var files = AllFiles();
             var latestFile = files[files.Length - 1];
 
-            return View(new FileId(latestFile));
+            return View(new SlideshowInit(latestFile, _settings.ImageRotationSec * 1000));
         }
 
         /// <summary>
@@ -58,7 +61,7 @@ namespace WeFiBox.Web.Controllers
                 var rand = new Random();
                 nextIndex = rand.Next(currentIndex);
             }
-            return Json(new FileId(files[nextIndex]));            
+            return Json(new { file = files[nextIndex] });            
         }
 
         /// <summary>
