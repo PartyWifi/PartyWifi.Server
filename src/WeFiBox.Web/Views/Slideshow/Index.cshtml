@@ -1,4 +1,4 @@
-﻿@model dynamic
+﻿@model WeFiBox.Web.Controllers.FileId
 
 @{
     ViewBag.Title = "Diashow";
@@ -19,9 +19,20 @@
     <title>@ViewBag.Title</title>
 </head>
 <body>
-    <div>
-        Canvas for simple Slideshow
-    </div>
+    <img id="image" src="slideshow/image/@Model.File">
 </body>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
+        asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+        asp-fallback-test="window.jQuery">
+</script>
+<script type="text/javascript">
+  var id = '@Model.File';
+  setInterval(function() {
+    $.get('slideshow/next/' + id, function(data){
+      id = data.file;
+      $('#image').attr('src', 'slideshow/image/' + id);
+    })
+  }, 2000);
+</script>
 </html>
 
