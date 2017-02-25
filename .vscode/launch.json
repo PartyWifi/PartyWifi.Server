@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/bin/Debug/netcoreapp1.0/WeFiBox.Web.dll",
+            "program": "${workspaceRoot}/src/WeddiFi.Server/bin/Debug/netcoreapp1.0/WeddiFi.Server.dll",
             "args": [],
-            "cwd": "${workspaceRoot}/src/WeFiBox.Web",
+            "cwd": "${workspaceRoot}/src/WeddiFi.Server",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
@@ -29,7 +29,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/src/WeFiBox.Web/Views"
+                "/Views": "${workspaceRoot}/src/WeddiFi.Server/Views"
             }
         },
         {
