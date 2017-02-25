@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/src/WeFiBox.Web/bin/Debug/netcoreapp1.0/WeFiBox.Web.dll",
+            "program": "${workspaceRoot}/bin/Debug/netcoreapp1.0/WeFiBox.Web.dll",
             "args": [],
             "cwd": "${workspaceRoot}/src/WeFiBox.Web",
             "stopAtEntry": false,
