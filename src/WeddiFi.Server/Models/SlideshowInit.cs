@@ -2,6 +2,9 @@
 
 namespace WeddiFi.Server.Models
 {
+    /// <summary>
+    /// Initialize the slideshow UI
+    /// </summary>
     public class SlideshowInit
     {
         public SlideshowInit(string file, double rotationMs)
@@ -10,8 +13,13 @@ namespace WeddiFi.Server.Models
             RotationMs = (int)Math.Ceiling(rotationMs);
         }
 
+        /// <summary>
+        /// Initial file of the cast
+        /// </summary>
         public string File { get; }
 
-        public int RotationMs { get; set; }
+        /// <summary>
+        /// Rotation time between images in milliseconds
+        public int RotationMs { get; }
     }
 }

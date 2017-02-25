@@ -1,6 +1,4 @@
-﻿@model WeddiFi.Server.Models.SlideshowInit
-
-@{
+﻿@{
     ViewBag.Title = "Diashow";
 }
 
@@ -38,22 +36,30 @@
 </head>
 <body>
     <div id="container">
-        <img id="image" src="slideshow/image/@Model.File" alt="SlideshowImage"/>
+        <img id="image" alt="SlideshowImage"/>
     </div>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
             asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
             asp-fallback-test="window.jQuery">
     </script>
     <script type="text/javascript">
-        var latest = '@Model.File'; // Latest picture known to client
-        setInterval(function() {
+        var latest = ''; // Latest picture known to client
+
+        // Function to update image
+        function update() {
             $.get('slideshow/next/' + latest, function(data){
                 // Show new image
                 $('#image').attr('src', 'slideshow/image/' + data.file);
                 if(data.file > latest)
-                    latest = data.file; // Update latest if response is newer
+                    latest = data.file; // Update latest if response is newer 
             });
-        }, @Model.RotationMs);
+        }
+
+        // Initialize client
+        $.get('slideshow/init', function(data){
+            latest = data.file;
+            setInterval(update, data.rotationMs);
+        });
     </script>
 </body>
 </html>

@@ -17,10 +17,12 @@ namespace WeddiFi.Server.Controllers
             _settings = settings.Value;
         }
 
-        // GET: /<controller>/
+        /// <summary>
+        /// Render index page of slideshow with latest picture
+        /// </summary>
         public IActionResult Index()
         {
-            return View(CreateInitModel());
+            return View();
         }
 
         /// <summary>
@@ -28,18 +30,10 @@ namespace WeddiFi.Server.Controllers
         /// </summary>
         public IActionResult Init()
         {
-            return Json(CreateInitModel());
-        }
-
-        /// <summary>
-        /// Create init model for slideshow client
-        /// </summary>
-        private SlideshowInit CreateInitModel()
-        {
             var files = AllFiles();
             var latestFile = files[files.Length - 1];
 
-            return new SlideshowInit(latestFile, _settings.ImageRotationSec * 1000);
+            return Json(new SlideshowInit(latestFile, _settings.ImageRotationSec * 1000));
         }
 
         /// <summary>
