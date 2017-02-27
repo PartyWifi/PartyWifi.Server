@@ -28,6 +28,6 @@ namespace PartyWifi.Server
         /// <summary>
         /// Image rotation time in seconds
         /// </summary>
-        public double ImageRotationSec { get; set; }
+        public int ImageRotationSec { get; set; }
     }
 }

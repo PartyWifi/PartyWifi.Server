@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -10,10 +11,10 @@ namespace PartyWifi.Server.Components
 
         IEnumerable<ImageInfo> GetAll();
 
-        Stream Get(ImageInfo info);
-
-        Stream Get(string name);
+        ImageInfo Get(string name);
 
         Task Add(Stream stream);
+
+        event EventHandler<ImageInfo> Added;
     }
 }

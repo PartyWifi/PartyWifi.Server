@@ -5,12 +5,12 @@ namespace PartyWifi.Server.Models
     /// <summary>
     /// Initialize the slideshow UI
     /// </summary>
-    public class SlideshowInit
+    public class SideshowImage
     {
-        public SlideshowInit(string file, double rotationMs)
+        public SideshowImage(string file, int rotationMs)
         {
             File = file;
-            RotationMs = (int)Math.Ceiling(rotationMs);
+            RotationMs = rotationMs;
         }
 
         /// <summary>

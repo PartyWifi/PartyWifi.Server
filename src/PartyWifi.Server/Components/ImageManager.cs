@@ -46,15 +46,10 @@ namespace PartyWifi.Server.Components
             return _images.OrderBy(i => i.UploadDate);
         }
 
-        public Stream Get(string name)
+        public ImageInfo Get(string name)
         {
             var info = _images.First(i => i.Name.Equals(name));
-            return Get(info);
-        }
-
-        public Stream Get(ImageInfo info)
-        {
-            return new FileStream(info.ResizedPath, FileMode.Open);
+            return info;
         }
 
         public async Task Add(Stream stream)
@@ -77,14 +72,18 @@ namespace PartyWifi.Server.Components
             await SaveFromStream(resizedStream, resizedPath);
             File.SetLastWriteTime(resizedPath, now);
 
-            _images.Add(new ImageInfo
+            var info = new ImageInfo
             {
                 Name = fileName,
                 OriginalPath = originalPath,
                 ResizedPath = resizedPath,
                 UploadDate = now,
                 Size = resizedStream.Length
-            });
+            };
+
+            _images.Add(info);
+
+            RaiseAdded(info);
         }
 
         /// <summary>
@@ -128,6 +127,12 @@ namespace PartyWifi.Server.Components
 
                 return resizedStream;
             }
+        }
+
+        public event EventHandler<ImageInfo> Added;
+        private void RaiseAdded(ImageInfo info)
+        {
+            Added?.Invoke(this, info);
         }
     }
 }
