@@ -25,7 +25,7 @@ namespace PartyWifi.Server.Controllers
 
         public IActionResult FileList()
         {
-            var fileListEntries = (from image in Directory.GetFiles(_settings.UploadDir)
+            var fileListEntries = (from image in Directory.GetFiles(_settings.ResizedDir)
                                    let fileInfo = new FileInfo(image)
                                    select new FileListEntry
                                    {

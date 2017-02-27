@@ -71,7 +71,7 @@ namespace PartyWifi.Server.Controllers
             var filePath = Path.Combine(_settings.ResizedDir, id);
             if(!FileHelper.Exists(filePath))
             {
-                filePath = Path.Combine(_settings.UploadDir, id);
+                filePath = Path.Combine(_settings.ResizedDir, id);
             }
 
             // Return file stream
@@ -85,7 +85,7 @@ namespace PartyWifi.Server.Controllers
         private string[] AllFiles()
         {
             return Directory
-                .EnumerateFiles(_settings.UploadDir, "*.jpg") // Get all files excluding '.tmp' files
+                .EnumerateFiles(_settings.ResizedDir, "*.jpg") // Get all files excluding '.tmp' files
                 .Select(Path.GetFileName) // Extract file name
                 .OrderBy(fn => fn) // Order them
                 .ToArray();
