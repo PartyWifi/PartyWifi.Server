@@ -8,27 +8,23 @@ namespace PartyWifi.Server.Components
 {
     public class SlideshowHandler : ISlideshowHandler
     {
+        public int RotationMs { get; set; }
+
         private readonly Settings _settings;
         private readonly IImageManager _imageManager;
 
         private ImageInfo _lastImage;
-        private int _rotationMs;
 
         public SlideshowHandler(IOptions<Settings> settings, IImageManager imageManager)
         {
             _settings = settings.Value;
             _imageManager = imageManager;
         }
-
+        
         public void Initialize()
         {
             _lastImage = GetLastImage();
-            _rotationMs = _settings.ImageRotationSec * 1000;
-        }
-
-        public void SetRefreshTime(int seconds)
-        {
-            _rotationMs = seconds * 1000;
+            RotationMs = _settings.ImageRotationSec * 1000;
         }
 
         private ImageInfo GetLastImage()
@@ -39,7 +35,7 @@ namespace PartyWifi.Server.Components
         public SideshowImage GetInitial()
         {
             var last = _imageManager.GetAll().Last();
-            return new SideshowImage(last.Name, _rotationMs);
+            return new SideshowImage(last.Name, RotationMs);
         }
 
         public SideshowImage Next()
@@ -68,7 +64,7 @@ namespace PartyWifi.Server.Components
             }
 
             var info = _imageManager.Get(files[nextIndex]);
-            return new SideshowImage(info.Name, _rotationMs);
+            return new SideshowImage(info.Name, RotationMs);
         }
     }
 }

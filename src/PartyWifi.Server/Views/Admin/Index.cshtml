@@ -6,3 +6,12 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+
+<script>
+
+
+    function rotationTimeChanged(time) {
+        $.post('admin/rotationTime', { seconds: time });
+    }
+
+</script>
