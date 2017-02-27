@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/src/WeddiFi.Server/bin/Debug/netcoreapp1.0/WeddiFi.Server.dll",
+            "program": "${workspaceRoot}/src/PartyWifi.Server/bin/Debug/netcoreapp1.0/PartyWifi.Server.dll",
             "args": [],
-            "cwd": "${workspaceRoot}/src/WeddiFi.Server",
+            "cwd": "${workspaceRoot}/src/PartyWifi.Server",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
@@ -29,7 +29,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/src/WeddiFi.Server/Views"
+                "/Views": "${workspaceRoot}/src/PartyWifi.Server/Views"
             }
         },
         {

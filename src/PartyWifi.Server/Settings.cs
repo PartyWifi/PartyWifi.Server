@@ -1,4 +1,4 @@
-namespace WeddiFi.Server
+namespace PartyWifi.Server
 {
     /// <summary>
     /// Settings of the application

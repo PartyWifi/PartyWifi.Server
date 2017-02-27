@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ImageSharp;
 
-namespace WeddiFi.Server.Controllers
+namespace PartyWifi.Server.Controllers
 {
     public class UploadController : Controller
     {

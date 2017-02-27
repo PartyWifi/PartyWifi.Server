@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace WeddiFi.Server
+namespace PartyWifi.Server
 {
     public class Program
     {

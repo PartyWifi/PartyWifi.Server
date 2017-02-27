@@ -5,9 +5,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using WeddiFi.Server.Models;
+using PartyWifi.Server.Models;
 
-namespace WeddiFi.Server.Controllers
+namespace PartyWifi.Server.Controllers
 {
     public class HomeController : Controller
     {

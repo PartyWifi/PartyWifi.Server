@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WeddiFi.Server.Models
+namespace PartyWifi.Server.Models
 {
     public class FileListEntry
     {

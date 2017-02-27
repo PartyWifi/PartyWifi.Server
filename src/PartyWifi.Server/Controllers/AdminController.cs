@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WeddiFi.Server.Controllers
+namespace PartyWifi.Server.Controllers
 {
     public class AdminController : Controller
     {

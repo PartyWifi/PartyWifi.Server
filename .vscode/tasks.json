@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/src/WeddiFi.Server/project.json", "-c", "Debug"
+                "${workspaceRoot}/src/PartyWifi.Server/project.json", "-c", "Debug"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
