@@ -1,19 +1,20 @@
-﻿using System.IO;
-using FileHelper = System.IO.File;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using PartyWifi.Server.Components;
 using PartyWifi.Server.Models;
 
 namespace PartyWifi.Server.Controllers
 {
     public class SlideshowController : Controller
     {
+        private readonly IImageManager _imageManager;
         private readonly Settings _settings;
 
-        public SlideshowController(IOptions<Settings> settings)
+        public SlideshowController(IOptions<Settings> settings, IImageManager imageManager)
         {
+            _imageManager = imageManager;
             _settings = settings.Value;
         }
 
@@ -30,10 +31,10 @@ namespace PartyWifi.Server.Controllers
         /// </summary>
         public IActionResult Init()
         {
-            var files = AllFiles();
-            var latestFile = files[files.Length - 1];
+            var files = _imageManager.GetAll();
+            var latestFile = files.Last();
 
-            return Json(new SlideshowInit(latestFile, _settings.ImageRotationSec * 1000));
+            return Json(new SlideshowInit(latestFile.Name, _settings.ImageRotationSec * 1000));
         }
 
         /// <summary>
@@ -41,7 +42,9 @@ namespace PartyWifi.Server.Controllers
         /// </summary>
         public IActionResult Next(string id)
         {
-            var files = AllFiles();
+            //TODO: find better way to get and do not iterate over all images
+            var files = _imageManager.GetAll().Select(i => i.Name).ToArray();
+
             // Find current index in all files starting from the back
             var currentIndex = 0;
             for (var index = files.Length - 1; index  >= 0; index--)
@@ -67,28 +70,10 @@ namespace PartyWifi.Server.Controllers
         /// </summary>
         public IActionResult Image(string id)
         {           
-            // Check if file has a resized clone, otherwise use original
-            var filePath = Path.Combine(_settings.ResizedDir, id);
-            if(!FileHelper.Exists(filePath))
-            {
-                filePath = Path.Combine(_settings.ResizedDir, id);
-            }
+            var fileStream = _imageManager.Get(id);
 
             // Return file stream
-            var stream = new FileStream(filePath, FileMode.Open);
-            return File(stream, "image/jpeg");
-        }
-
-        /// <summary>
-        /// Get all files in the UploadDir in chronological order
-        /// </summary>
-        private string[] AllFiles()
-        {
-            return Directory
-                .EnumerateFiles(_settings.ResizedDir, "*.jpg") // Get all files excluding '.tmp' files
-                .Select(Path.GetFileName) // Extract file name
-                .OrderBy(fn => fn) // Order them
-                .ToArray();
+            return File(fileStream, "image/jpeg");
         }
     }
 }

@@ -20,6 +20,7 @@ namespace PartyWifi.Server.Models
 
         /// <summary>
         /// Rotation time between images in milliseconds
+        /// </summary>
         public int RotationMs { get; }
     }
 }
