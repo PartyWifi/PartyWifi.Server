@@ -1,65 +1,40 @@
 ﻿@{
-    ViewBag.Title = "Diashow";
+    ViewBag.Title = "Slideshow";
 }
-
-<style>
-    body {
-        background-color: black;
-        height: 100%;
-        width: 100%;
-        margin: 0px; /* Render frameless in the middle */
-    }
-
-    #container {
-        height: 100%;
-        width: 100%;
-        position: relative;
-    }
-
-    #image {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        display: block;
-    }
-</style>
-
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/slideshow.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/slideshow.min.css" asp-append-version="true" />
+    </environment>
 </head>
 <body>
     <div id="container">
         <img id="image" alt="SlideshowImage"/>
     </div>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
-            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-            asp-fallback-test="window.jQuery">
-    </script>
-    <script type="text/javascript">
-        var latest = ''; // Latest picture known to client
 
-        // Function to update image
-        function update() {
-            $.get('slideshow/next/' + latest, function(data){
-                // Show new image
-                $('#image').attr('src', 'slideshow/image/' + data.file);
-                if(data.file > latest)
-                    latest = data.file; // Update latest if response is newer 
-            });
-        }
-
-        // Initialize client
-        $.get('slideshow/init', function(data){
-            latest = data.file;
-            setInterval(update, data.rotationMs);
-        });
-    </script>
+    <environment names="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="~/js/slideshow.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        
+        <script src="~/js/slideshow.min.js" asp-append-version="true"></script>
+    </environment>
 </body>
 </html>
