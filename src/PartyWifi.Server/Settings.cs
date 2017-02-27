@@ -6,9 +6,9 @@ namespace PartyWifi.Server
     public class Settings
     {
         /// <summary>
-        /// Directory for the uploads in the local file system
+        /// Directory for the original uploaded images
         /// </summary>
-        public string UploadDir { get; set; }
+        public string OriginalsDir { get; set; }
 
         /// <summary>
         /// Directory for resized photos on local file system

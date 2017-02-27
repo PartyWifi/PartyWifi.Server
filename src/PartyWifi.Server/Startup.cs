@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PartyWifi.Server.Components;
 
 namespace PartyWifi.Server
 {
@@ -36,10 +37,13 @@ namespace PartyWifi.Server
             services.Configure<Settings>(Configuration.GetSection("Settings"));
 
             services.AddMvc();
+
+            // Add image manager
+            services.AddSingleton<IImageManager, ImageManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IImageManager imageManager)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -66,6 +70,8 @@ namespace PartyWifi.Server
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            imageManager.Initialize();
         }
     }
 }

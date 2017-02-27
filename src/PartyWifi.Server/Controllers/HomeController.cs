@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.AspNetCore.Hosting;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+using PartyWifi.Server.Components;
 using PartyWifi.Server.Models;
 
 namespace PartyWifi.Server.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Settings _settings;
+        private readonly IImageManager _imageManager;
 
-        public HomeController(IOptions<Settings> settings)
+        public HomeController(IImageManager imageManager)
         {
-            _settings = settings.Value;
+            _imageManager = imageManager;
         }
 
         public IActionResult Index()
@@ -25,17 +21,15 @@ namespace PartyWifi.Server.Controllers
 
         public IActionResult FileList()
         {
-            var fileListEntries = (from image in Directory.GetFiles(_settings.UploadDir)
-                                   let fileInfo = new FileInfo(image)
-                                   select new FileListEntry
-                                   {
-                                       Name = fileInfo.Name,
-                                       PublicUrl = $"/uploads/{fileInfo.Name}",
-                                       Size = fileInfo.Length,
-                                       UploadDate = fileInfo.LastWriteTime //??
-                                   }).ToList();
+            var files = _imageManager.GetAll().Select(imageInfo => new FileListEntry
+            {
+                Name = imageInfo.Name,
+                PublicUrl = $"/uploads/resized/{imageInfo.Name}",
+                Size = imageInfo.Size,
+                UploadDate = imageInfo.UploadDate
+            }).ToList();
 
-            return View(fileListEntries);
+            return View(files);
         }
 
         public IActionResult Error()
