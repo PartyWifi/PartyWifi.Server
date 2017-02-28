@@ -65,7 +65,7 @@ namespace PartyWifi.Server.Components
 
             var now = DateTime.Now;
 
-            // Copy to filesystem for later
+            // Copy to originals for the customer to take home
             var originalPath = Path.Combine(_settings.OriginalsDir, imageName);
             await SaveFromStream(stream, originalPath);
             File.SetLastWriteTime(originalPath, now);
@@ -73,11 +73,12 @@ namespace PartyWifi.Server.Components
             // Resize for the slide-show
             var resizedStream = ResizeIfNecessary(stream);
 
-            // Rename file to make it accessible to slideshow
+            // Save to our hidden 'resized' directory for the slideshow
             var resizedPath = Path.Combine(_settings.ResizedDir, imageName);
             await SaveFromStream(resizedStream, resizedPath);
             File.SetLastWriteTime(resizedPath, now);
 
+            // Create image model
             var info = new ImageInfo
             {
                 Id = imageId,
@@ -116,26 +117,29 @@ namespace PartyWifi.Server.Components
                 var heightScale = image.Height / (double)_settings.MaxHeight;
 
                 if (widthScale <= 1 && heightScale <= 1)
+                {   
+                    // Reset and return current stream
+                    memoryStream.Position = 0;
                     return memoryStream;
+                }
 
                 // Find the dimension that needs the most adjustment and create new dimensions
                 var scaling = widthScale > heightScale ? widthScale : heightScale;
                 var newWidth = (int)Math.Floor(image.Width / scaling);
                 var newHeight = (int)Math.Floor(image.Height / scaling);
 
-                image.Resize(newWidth, newHeight);
+                // Reset stream and reuse it
+                memoryStream.SetLength(0);
+                image.Resize(newWidth, newHeight)
+                     .Save(memoryStream);
+                memoryStream.Position = 0;
 
-                var resizedStream = new MemoryStream();
-
-                //Resave in same stream
-                image.Save(resizedStream);
-                resizedStream.Position = 0;
-
-                return resizedStream;
+                return memoryStream;
             }
         }
 
         public event EventHandler<ImageInfo> Added;
+
         private void RaiseAdded(ImageInfo info)
         {
             Added?.Invoke(this, info);
