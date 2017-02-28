@@ -1,4 +1,4 @@
-﻿{
+{
   "dependencies": {
     "Microsoft.NETCore.App": {
       "version": "1.1.0",
@@ -25,7 +25,8 @@
     "ImageSharp": "1.0.0-alpha2-00117",
     "ImageSharp.Processing": "1.0.0-alpha2-00105",
     "ImageSharp.Formats.Jpeg": "1.0.0-alpha2-00117",
-    "Newtonsoft.Json": "9.0.1"
+    "Newtonsoft.Json": "9.0.1",
+    "Swashbuckle.AspNetCore": "1.0.0-rc3"
   },
 
   "tools": {
