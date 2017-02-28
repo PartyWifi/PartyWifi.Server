@@ -2,7 +2,13 @@
 function update() {
     $.get('slideshow/next', function (slideshowImage) {
         // Show new image
-        $('#image').attr('src', 'slideshow/image/' + slideshowImage.imageId);
+        var image = $('#image');
+
+        image.fadeOut(1000, function() {
+            image.attr('src', 'slideshow/image/' + slideshowImage.imageId);
+            image.fadeIn(1000);
+        });
+        
         setTimeout(update, slideshowImage.rotationMs);
     });
 }
