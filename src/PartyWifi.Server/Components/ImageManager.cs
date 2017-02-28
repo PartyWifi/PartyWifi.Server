@@ -21,21 +21,26 @@ namespace PartyWifi.Server.Components
         public void Initialize()
         {
             var images = Directory.EnumerateFiles(_settings.ResizedDir).Select(Path.GetFileName).ToArray();
-            var imageInfos = new ImageInfo[images.Length];
+            var imageInfos = new List<ImageInfo>();
 
-            for (var index = 0; index < images.Length; index++)
+            foreach (var imageName in images)
             {
-                var imageName = images[index];
-                var model = new ImageInfo
+                var imageId = Path.GetFileNameWithoutExtension(imageName);
+
+                var resizedPath = Path.Combine(_settings.ResizedDir, imageName);
+                var fileInfo = new FileInfo(resizedPath);
+
+                var info = new ImageInfo
                 {
+                    Id = imageId,
                     Name = imageName,
                     OriginalPath = Path.Combine(_settings.OriginalsDir, imageName),
-                    ResizedPath = Path.Combine(_settings.ResizedDir, imageName),
+                    ResizedPath = resizedPath,
+                    Size = fileInfo.Length,
+                    UploadDate = fileInfo.CreationTime,
                 };
-                model.Size = new FileInfo(model.ResizedPath).Length;
-                model.UploadDate = File.GetCreationTime(model.OriginalPath);
 
-                imageInfos[index] = model;
+                imageInfos.Add(info);
             }
 
             _images = new List<ImageInfo>(imageInfos);
@@ -46,21 +51,22 @@ namespace PartyWifi.Server.Components
             return _images.OrderBy(i => i.UploadDate);
         }
 
-        public ImageInfo Get(string name)
+        public ImageInfo Get(string imageId)
         {
-            var info = _images.First(i => i.Name.Equals(name));
+            var info = _images.First(i => i.Id.Equals(imageId));
             return info;
         }
 
         public async Task Add(Stream stream)
         {
             // Create unambiguous filename
-            var fileName = $"{Guid.NewGuid()}.jpg";
+            var imageId = Guid.NewGuid().ToString();
+            var imageName = $"{imageId}.jpg";
 
             var now = DateTime.Now;
 
             // Copy to filesystem for later
-            var originalPath = Path.Combine(_settings.OriginalsDir, fileName);
+            var originalPath = Path.Combine(_settings.OriginalsDir, imageName);
             await SaveFromStream(stream, originalPath);
             File.SetLastWriteTime(originalPath, now);
 
@@ -68,13 +74,14 @@ namespace PartyWifi.Server.Components
             var resizedStream = ResizeIfNecessary(stream);
 
             // Rename file to make it accessible to slideshow
-            var resizedPath = Path.Combine(_settings.ResizedDir, fileName);
+            var resizedPath = Path.Combine(_settings.ResizedDir, imageName);
             await SaveFromStream(resizedStream, resizedPath);
             File.SetLastWriteTime(resizedPath, now);
 
             var info = new ImageInfo
             {
-                Name = fileName,
+                Id = imageId,
+                Name = imageName,
                 OriginalPath = originalPath,
                 ResizedPath = resizedPath,
                 UploadDate = now,
@@ -82,7 +89,6 @@ namespace PartyWifi.Server.Components
             };
 
             _images.Add(info);
-
             RaiseAdded(info);
         }
 

@@ -8,8 +8,6 @@ namespace PartyWifi.Server.Components
 
         void Initialize();
 
-        SideshowImage GetInitial();
-
-        SideshowImage Next();
+        ImageInfo Next();
     }
 }

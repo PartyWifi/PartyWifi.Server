@@ -7,16 +7,16 @@ namespace PartyWifi.Server.Models
     /// </summary>
     public class SideshowImage
     {
-        public SideshowImage(string file, int rotationMs)
+        public SideshowImage(string imageId, int rotationMs)
         {
-            File = file;
+            ImageId = imageId;
             RotationMs = rotationMs;
         }
 
         /// <summary>
         /// Initial file of the cast
         /// </summary>
-        public string File { get; }
+        public string ImageId { get; }
 
         /// <summary>
         /// Rotation time between images in milliseconds

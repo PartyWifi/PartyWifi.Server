@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using PartyWifi.Server.Components;
+using PartyWifi.Server.Models;
 
 namespace PartyWifi.Server.Controllers
 {
@@ -24,21 +25,12 @@ namespace PartyWifi.Server.Controllers
         }
 
         /// <summary>
-        /// Receive init values as json for non HTML clients
-        /// </summary>
-        public IActionResult Init()
-        {
-            var init = _slideshowHandler.GetInitial();
-            return Json(init);
-        }
-
-        /// <summary>
         /// Get name of next image
         /// </summary>
         public IActionResult Next()
         {
             var next = _slideshowHandler.Next();
-            return Json(next);            
+            return Json(new SideshowImage(next.Id, _slideshowHandler.RotationMs));            
         }
         
         /// <summary>

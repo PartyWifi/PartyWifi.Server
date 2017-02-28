@@ -11,7 +11,7 @@ namespace PartyWifi.Server.Components
 
         IEnumerable<ImageInfo> GetAll();
 
-        ImageInfo Get(string name);
+        ImageInfo Get(string imageId);
 
         Task Add(Stream stream);
 

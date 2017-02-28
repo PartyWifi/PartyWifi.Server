@@ -7,6 +7,8 @@ namespace PartyWifi.Server.Components
     /// </summary>
     public class ImageInfo
     {
+        public string Id { get; set; }
+
         public string Name { get; set; }
 
         public long Size { get; set; }
