@@ -11,6 +11,15 @@
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "build release",
+            "suppressTaskName": true,
+            "args": [
+                "build", "${workspaceRoot}/src/PartyWifi.Server/project.json", "-c", "Release"
+            ],
+            "isBuildCommand": true,
+            "problemMatcher": "$msCompile"
         }
     ]
 }
