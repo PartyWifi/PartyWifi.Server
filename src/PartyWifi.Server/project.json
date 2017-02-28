@@ -8,7 +8,7 @@
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-preview2-final",
+      "version": "1.1.0-preview4-final",
       "type": "build"
     },
     "Microsoft.AspNetCore.Routing": "1.1.0",
@@ -21,18 +21,19 @@
     "Microsoft.Extensions.Logging.Console": "1.1.0",
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
     "ImageSharp": "1.0.0-alpha2-00117",
     "ImageSharp.Processing": "1.0.0-alpha2-00105",
     "ImageSharp.Formats.Jpeg": "1.0.0-alpha2-00117",
+    "ImageSharp.Formats.Png": "1.0.0-alpha2-00113",
     "Newtonsoft.Json": "9.0.1",
     "Swashbuckle.AspNetCore": "1.0.0-rc3"
   },
 
   "tools": {
-    "BundlerMinifier.Core": "2.0.238",
-    "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview2-final",
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
+    "BundlerMinifier.Core": "2.4.337",
+    "Microsoft.AspNetCore.Razor.Tools": "1.1.0-preview4-final",
+    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.1.0-preview4-final"
   },
 
   "frameworks": {
