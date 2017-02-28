@@ -20,41 +20,47 @@ namespace PartyWifi.Server.Components
 
         public void Initialize()
         {
-            var images = Directory.EnumerateFiles(_settings.ResizedDir).Select(Path.GetFileName).ToArray();
-            var imageInfos = new List<ImageInfo>();
+            _images = new List<ImageInfo>();
 
-            foreach (var imageName in images)
+            foreach (var resizedPath in Directory.EnumerateFiles(_settings.ResizedDir))
             {
+                var imageName = Path.GetFileName(resizedPath);
                 var imageId = Path.GetFileNameWithoutExtension(imageName);
 
-                var resizedPath = Path.Combine(_settings.ResizedDir, imageName);
+                var originalPath = Path.Combine(_settings.OriginalsDir, imageName);
                 var fileInfo = new FileInfo(resizedPath);
 
                 var info = new ImageInfo
                 {
                     Id = imageId,
                     Name = imageName,
-                    OriginalPath = Path.Combine(_settings.OriginalsDir, imageName),
+                    OriginalPath = originalPath,
                     ResizedPath = resizedPath,
                     Size = fileInfo.Length,
                     UploadDate = fileInfo.CreationTime,
                 };
 
-                imageInfos.Add(info);
+                _images.Add(info);
             }
-
-            _images = new List<ImageInfo>(imageInfos);
         }
 
-        public IEnumerable<ImageInfo> GetAll()
+        public int ImageCount => _images.Count;
+
+        public ImageInfo Get(int index)
         {
-            return _images.OrderBy(i => i.UploadDate);
+            var info = _images[index];
+            return info;
         }
 
         public ImageInfo Get(string imageId)
         {
             var info = _images.First(i => i.Id.Equals(imageId));
             return info;
+        }
+
+        public ImageInfo[] GetRange(int start, int count)
+        {
+            return _images.Skip(start).Take(count).ToArray();
         }
 
         public async Task Add(Stream stream)

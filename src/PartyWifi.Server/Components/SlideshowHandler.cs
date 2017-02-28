@@ -11,7 +11,7 @@ namespace PartyWifi.Server.Components
         private readonly Settings _settings;
         private readonly IImageManager _imageManager;
 
-        private ImageInfo _lastImage;
+        private int _latestImageIndex;
 
         public SlideshowHandler(IOptions<Settings> settings, IImageManager imageManager)
         {
@@ -21,36 +21,25 @@ namespace PartyWifi.Server.Components
         
         public void Initialize()
         {
-            _lastImage = _imageManager.GetAll().Last();
+            _latestImageIndex = _imageManager.ImageCount - 1;
             RotationMs = _settings.ImageRotationSec * 1000;
         }
 
         public ImageInfo Next()
         {
-            //TODO: use timer to load next image
-
-            //TODO: find better way to get and do not iterate over all images
-            var files = _imageManager.GetAll().Select(i => i.Id).ToArray();
-
-            // Find current index in all files starting from the back
-            var currentIndex = 0;
-            for (var index = files.Length - 1; index >= 0; index--)
-            {
-                if (files[index] != _lastImage.Name)
-                    continue;
-                currentIndex = index;
-                break;
-            }
-
             // Return next in array or select random from older photos
-            var nextIndex = currentIndex + 1;
-            if (nextIndex >= files.Length)
+            var nextIndex = _latestImageIndex + 1;
+            if (nextIndex >= _imageManager.ImageCount)
             {
                 var rand = new Random();
-                nextIndex = rand.Next(files.Length);
+                nextIndex = rand.Next(_imageManager.ImageCount);
+            }
+            else
+            {
+                _latestImageIndex = nextIndex;
             }
 
-            var info = _imageManager.Get(files[nextIndex]);
+            var info = _imageManager.Get(nextIndex);
             return info;
         }
     }

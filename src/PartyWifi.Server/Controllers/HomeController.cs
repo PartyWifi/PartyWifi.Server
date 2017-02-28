@@ -21,7 +21,8 @@ namespace PartyWifi.Server.Controllers
 
         public IActionResult FileList()
         {
-            var files = _imageManager.GetAll().Select(imageInfo => new FileListEntry
+            // TODO: Use GetRange for Paging
+            var files = _imageManager.GetRange(0, _imageManager.ImageCount).Select(imageInfo => new FileListEntry
             {
                 Name = imageInfo.Name,
                 PublicUrl = $"/uploads/resized/{imageInfo.Name}",
