@@ -6,14 +6,9 @@ namespace PartyWifi.Server
     public class Settings
     {
         /// <summary>
-        /// Directory for the original uploaded images
+        /// Base Directory of our application
         /// </summary>
-        public string OriginalsDir { get; set; }
-
-        /// <summary>
-        /// Directory for resized photos on local file system
-        /// </summary>
-        public string ResizedDir {get; set;}
+        public string Directory { get; set; }
 
         /// <summary>
         /// Maximum height of images
