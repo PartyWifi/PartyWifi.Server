@@ -79,7 +79,7 @@ namespace PartyWifi.Server.Components
             image.IsApproved = bool.Parse(value);
 
             // UploadDate
-            value = LineValue(nameof(UploadDate), lines).Trim();
+            value = LineValue(nameof(UploadDate), lines);
             image.UploadDate = DateTime.ParseExact(value, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
 
             // Load different image hashes
@@ -94,7 +94,7 @@ namespace PartyWifi.Server.Components
         {
             var line = lines.First(l => l.StartsWith(property));
             var value = line.Split(':')[1];
-            return value;
+            return value.Trim();
         }
     }
 }

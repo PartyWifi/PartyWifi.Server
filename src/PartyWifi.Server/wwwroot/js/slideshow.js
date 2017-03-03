@@ -5,7 +5,7 @@ function update() {
         var image = $('#image');
 
         image.fadeOut(1000, function() {
-            image.attr('src', 'slideshow/image/' + slideshowImage.imageId);
+            image.attr('src', 'image/resized/' + slideshowImage.imageId);
             image.fadeIn(1000);
         });
         

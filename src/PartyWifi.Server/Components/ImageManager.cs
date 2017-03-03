@@ -180,7 +180,7 @@ namespace PartyWifi.Server.Components
         {
             var subdir = hash.Substring(0, 2);
             var fileName = hash.Substring(2);
-            var path = Path.Combine(_settings.Directory, subdir, fileName);
+            var path = Path.Combine(_settings.Directory, ImageDirectory, subdir, fileName);
             
             return new FileStream(path, FileMode.Open);
         }

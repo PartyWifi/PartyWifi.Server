@@ -25,7 +25,7 @@ namespace PartyWifi.Server.Controllers
             var files = _imageManager.GetRange(0, _imageManager.ImageCount).Select(imageInfo => new FileListEntry
             {
                 Name = imageInfo.Id,
-                PublicUrl = $"/uploads/resized/{imageInfo.Id}",
+                PublicUrl = $"/image/thumbnail/{imageInfo.Id}",
                 Size = imageInfo.Size,
                 UploadDate = imageInfo.UploadDate
             }).ToList();
