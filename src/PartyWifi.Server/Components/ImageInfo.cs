@@ -56,7 +56,7 @@ namespace PartyWifi.Server.Components
             {
                 writer.WriteLine($"{nameof(Size)}: {Size}");
                 writer.WriteLine($"{nameof(IsApproved)}: {IsApproved}");
-                writer.WriteLine($"{nameof(UploadDate)}: {UploadDate:yyyyMMdd HHmmss}");
+                writer.WriteLine($"{nameof(UploadDate)}: {UploadDate:yyyyMMdd-HHmmss}");
                 writer.WriteLine($"{nameof(Original)}: {Original}");
                 writer.WriteLine($"{nameof(Resized)}: {Resized}");
                 writer.WriteLine($"{nameof(Thumbnail)}: {Thumbnail}");
@@ -80,7 +80,7 @@ namespace PartyWifi.Server.Components
 
             // UploadDate
             value = LineValue(nameof(UploadDate), lines);
-            image.UploadDate = DateTime.ParseExact(value, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
+            image.UploadDate = DateTime.ParseExact(value, "yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
 
             // Load different image hashes
             image.Original = LineValue(nameof(Original), lines);
