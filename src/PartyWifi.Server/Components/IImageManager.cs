@@ -41,6 +41,11 @@ namespace PartyWifi.Server.Components
         Task Add(Stream stream);
 
         /// <summary>
+        /// Open image stream with this hash
+        /// </summary>
+        Stream Open(string hash);
+
+        /// <summary>
         /// Event raised when an image was Added
         /// <summary>
         event EventHandler<ImageInfo> Added;

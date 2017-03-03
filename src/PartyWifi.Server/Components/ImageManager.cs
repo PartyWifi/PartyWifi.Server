@@ -72,15 +72,23 @@ namespace PartyWifi.Server.Components
             var original = await SaveFromStream(stream);
 
             // Resize for the slide-show if image is too big
-            string resized = original;
-            if (ResizeIfNecessary(stream))
+            var resized = original;
+            if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))
             {
                 resized = await SaveFromStream(stream);
-            }       
+            }
+
+            // Resize for the thumbnail
+            var thumbnail = original;
+            if(ResizeIfNecessary(stream, 150, 150))
+            {
+                thumbnail = await SaveFromStream(stream);
+            }
 
             // Set hashes on model
             info.Resized = resized;
-            info.Original = original;     
+            info.Original = original;
+            info.Thumbnail = thumbnail;
 
             // Add and publish
             _images.Add(info);
@@ -139,12 +147,12 @@ namespace PartyWifi.Server.Components
         /// <returns>
         /// True if image was resized, otherwise false
         /// </returns>
-        private bool ResizeIfNecessary(Stream memoryStream)
+        private bool ResizeIfNecessary(Stream memoryStream, int width, int height)
         {
             using (var image = new Image(memoryStream))
             {
-                var widthScale = image.Width / (double)_settings.MaxWidth;
-                var heightScale = image.Height / (double)_settings.MaxHeight;
+                var widthScale = image.Width / (double)width;
+                var heightScale = image.Height / (double)height;
 
                 if (widthScale <= 1 && heightScale <= 1)
                 {   
@@ -166,6 +174,15 @@ namespace PartyWifi.Server.Components
 
                 return true;
             }
+        }
+
+        public Stream Open(string hash)
+        {
+            var subdir = hash.Substring(0, 2);
+            var fileName = hash.Substring(2);
+            var path = Path.Combine(_settings.Directory, subdir, fileName);
+            
+            return new FileStream(path, FileMode.Open);
         }
 
         public event EventHandler<ImageInfo> Added;
