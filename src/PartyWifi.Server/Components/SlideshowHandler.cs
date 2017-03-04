@@ -11,7 +11,10 @@ namespace PartyWifi.Server.Components
         private readonly Settings _settings;
         private readonly IImageManager _imageManager;
 
+        // Most recent picture that was shown in the presentation
         private int _latestImageIndex;
+        // Current image displayed by clients
+        private int _currentImageIndex;
 
         public SlideshowHandler(IOptions<Settings> settings, IImageManager imageManager)
         {
@@ -27,20 +30,26 @@ namespace PartyWifi.Server.Components
 
         public ImageInfo Next()
         {
-            // Return next in array or select random from older photos
+            // First check if any new fotos were added
             var nextIndex = _latestImageIndex + 1;
-            if (nextIndex >= _imageManager.ImageCount)
+            if (nextIndex < _imageManager.ImageCount)
             {
-                var rand = new Random();
-                nextIndex = rand.Next(_imageManager.ImageCount);
+                _latestImageIndex = nextIndex;
+                return _imageManager.Get(nextIndex);
+            }
+
+            // Otherwise keep iterating through the older photos
+            nextIndex = _currentImageIndex + 1;
+            if (nextIndex > _latestImageIndex)
+            {
+                // We reached the end, so start again
+                _currentImageIndex = nextIndex = 0;
             }
             else
             {
-                _latestImageIndex = nextIndex;
+                _currentImageIndex = nextIndex;
             }
-
-            var info = _imageManager.Get(nextIndex);
-            return info;
+            return _imageManager.Get(nextIndex);
         }
     }
 }
