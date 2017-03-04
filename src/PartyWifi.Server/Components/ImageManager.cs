@@ -36,7 +36,8 @@ namespace PartyWifi.Server.Components
 
             // Restore image objects from meta files
             _images = Directory.EnumerateFiles(_settings.Directory)
-                               .Select(ImageInfo.FromFile).ToList();
+                               .Select(ImageInfo.FromFile)
+                               .OrderBy(img => img.UploadDate).ToList();
         }
 
         public int ImageCount => _images.Count;
