@@ -41,7 +41,7 @@ namespace PartyWifi.Server.Controllers
             var info = _imageManager.Get(id);
 
             // Return file stream
-            return File(new FileStream(info.ResizedPath, FileMode.Open), "image/jpeg");
+            return File(new FileStream(info.Resized, FileMode.Open), "image/jpeg");
         }
     }
 }

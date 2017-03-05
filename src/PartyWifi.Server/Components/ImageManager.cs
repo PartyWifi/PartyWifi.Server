@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using ImageSharp;
 using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace PartyWifi.Server.Components
 {
     public class ImageManager : IImageManager
     {
+        private const string ImageDirectory = "img";
+
         private readonly Settings _settings;
+
+        private string _imgDir;
+
         private List<ImageInfo> _images;
 
         public ImageManager(IOptions<Settings> settings)
@@ -20,28 +27,17 @@ namespace PartyWifi.Server.Components
 
         public void Initialize()
         {
-            _images = new List<ImageInfo>();
-
-            foreach (var resizedPath in Directory.EnumerateFiles(_settings.ResizedDir))
+            // Prepare 'img' directory if it does not exist
+            _imgDir = Path.Combine(_settings.Directory, ImageDirectory);
+            if (!Directory.Exists(_imgDir))
             {
-                var imageName = Path.GetFileName(resizedPath);
-                var imageId = Path.GetFileNameWithoutExtension(imageName);
-
-                var originalPath = Path.Combine(_settings.OriginalsDir, imageName);
-                var fileInfo = new FileInfo(resizedPath);
-
-                var info = new ImageInfo
-                {
-                    Id = imageId,
-                    Name = imageName,
-                    OriginalPath = originalPath,
-                    ResizedPath = resizedPath,
-                    Size = fileInfo.Length,
-                    UploadDate = fileInfo.CreationTime,
-                };
-
-                _images.Add(info);
+                Directory.CreateDirectory(_imgDir);
             }
+
+            // Restore image objects from meta files
+            _images = Directory.EnumerateFiles(_settings.Directory)
+                               .Select(ImageInfo.FromFile)
+                               .OrderBy(img => img.UploadDate).ToList();
         }
 
         public int ImageCount => _images.Count;
@@ -65,68 +61,105 @@ namespace PartyWifi.Server.Components
 
         public async Task Add(Stream stream)
         {
-            // Create unambiguous filename
-            var imageId = Guid.NewGuid().ToString();
-            var imageName = $"{imageId}.jpg";
-
-            var now = DateTime.Now;
-
-            // Copy to originals for the customer to take home
-            var originalPath = Path.Combine(_settings.OriginalsDir, imageName);
-            await SaveFromStream(stream, originalPath);
-            File.SetLastWriteTime(originalPath, now);
-
-            // Resize for the slide-show
-            var resizedStream = ResizeIfNecessary(stream);
-
-            // Save to our hidden 'resized' directory for the slideshow
-            var resizedPath = Path.Combine(_settings.ResizedDir, imageName);
-            await SaveFromStream(resizedStream, resizedPath);
-            File.SetLastWriteTime(resizedPath, now);
-
-            // Create image model
+            // Prepare model
             var info = new ImageInfo
             {
-                Id = imageId,
-                Name = imageName,
-                OriginalPath = originalPath,
-                ResizedPath = resizedPath,
-                UploadDate = now,
-                Size = resizedStream.Length
+                Id = Guid.NewGuid().ToString(),
+                Size = stream.Length,
+                UploadDate = DateTime.Now
             };
 
+            // Save original for customer to take home
+            var original = await SaveFromStream(stream);
+
+            // Resize for the slide-show if image is too big
+            var resized = original;
+            if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))
+            {
+                resized = await SaveFromStream(stream);
+            }
+
+            // Resize for the thumbnail
+            var thumbnail = original;
+            if(ResizeIfNecessary(stream, 150, 150))
+            {
+                thumbnail = await SaveFromStream(stream);
+            }
+
+            // Set hashes on model
+            info.Resized = resized;
+            info.Original = original;
+            info.Thumbnail = thumbnail;
+
+            // Add and publish
             _images.Add(info);
             RaiseAdded(info);
+
+            // Save info as well
+            info.SaveTo(_settings.Directory);
         }
 
         /// <summary>
         /// Save the given stream to a file path
         /// </summary>
-        private static async Task SaveFromStream(Stream stream, string path)
+        private async Task<string> SaveFromStream(Stream stream)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create))
+            // Create hash and convert to name
+            string name;
+            using (var hashing = SHA1.Create())
+            {
+                var hash = hashing.ComputeHash(stream);
+                var nameBuilder = new StringBuilder(hash.Length * 2);
+                foreach(var hashByte in hash)
+                {
+                    nameBuilder.AppendFormat("{0:X2}", hashByte);
+                }
+                name = nameBuilder.ToString();
+
+                stream.Position = 0;
+            }
+            
+            // Subdirectory for first two characters
+            var subDir = Path.Combine(_imgDir, name.Substring(0, 2));
+            if (!Directory.Exists(subDir))
+            {
+                Directory.CreateDirectory(subDir);
+            }
+
+            // Rest is name of file
+            var fileName = Path.Combine(subDir, name.Substring(2));
+            if (File.Exists(fileName))
+                return name;  // File already exists
+
+            // Write to file
+            using (var fileStream = new FileStream(fileName, FileMode.Create))
             {
                 await stream.CopyToAsync(fileStream);
                 fileStream.Flush();
                 stream.Position = 0;
             }
+
+            return name;
         }
 
         /// <summary>
         /// Create a resized version of the image if necessary
         /// </summary>
-        private Stream ResizeIfNecessary(Stream memoryStream)
+        /// <returns>
+        /// True if image was resized, otherwise false
+        /// </returns>
+        private bool ResizeIfNecessary(Stream memoryStream, int width, int height)
         {
             using (var image = new Image(memoryStream))
             {
-                var widthScale = image.Width / (double)_settings.MaxWidth;
-                var heightScale = image.Height / (double)_settings.MaxHeight;
+                var widthScale = image.Width / (double)width;
+                var heightScale = image.Height / (double)height;
 
                 if (widthScale <= 1 && heightScale <= 1)
                 {   
                     // Reset and return current stream
                     memoryStream.Position = 0;
-                    return memoryStream;
+                    return false;
                 }
 
                 // Find the dimension that needs the most adjustment and create new dimensions
@@ -140,8 +173,17 @@ namespace PartyWifi.Server.Components
                      .Save(memoryStream);
                 memoryStream.Position = 0;
 
-                return memoryStream;
+                return true;
             }
+        }
+
+        public Stream Open(string hash)
+        {
+            var subdir = hash.Substring(0, 2);
+            var fileName = hash.Substring(2);
+            var path = Path.Combine(_settings.Directory, ImageDirectory, subdir, fileName);
+            
+            return new FileStream(path, FileMode.Open);
         }
 
         public event EventHandler<ImageInfo> Added;
