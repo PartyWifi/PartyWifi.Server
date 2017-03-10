@@ -32,16 +32,5 @@ namespace PartyWifi.Server.Controllers
             var next = _slideshowHandler.Next();
             return Json(new SideshowImage(next.Id, _slideshowHandler.RotationMs));            
         }
-        
-        /// <summary>
-        /// Get next image based on current id
-        /// </summary>
-        public IActionResult Image(string id)
-        {           
-            var info = _imageManager.Get(id);
-
-            // Return file stream
-            return File(new FileStream(info.Resized, FileMode.Open), "image/jpeg");
-        }
     }
 }

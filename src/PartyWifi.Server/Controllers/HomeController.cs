@@ -24,7 +24,7 @@ namespace PartyWifi.Server.Controllers
             // TODO: Use GetRange for Paging
             var files = _imageManager.GetRange(0, _imageManager.ImageCount).Select(imageInfo => new FileListEntry
             {
-                Name = imageInfo.Id,
+                Name = imageInfo.Name,
                 PublicUrl = $"/image/thumbnail/{imageInfo.Id}",
                 Size = imageInfo.Size,
                 UploadDate = imageInfo.UploadDate

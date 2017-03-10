@@ -59,24 +59,29 @@ namespace PartyWifi.Server.Components
             return _images.Skip(start).Take(count).ToArray();
         }
 
-        public async Task Add(Stream stream)
+        public async Task Add(string name, Stream stream)
         {
             // Prepare model
+            var id = Guid.NewGuid().ToString().Split('-')[0];
             var info = new ImageInfo
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = id,
+                Name = name,
                 Size = stream.Length,
                 UploadDate = DateTime.Now
             };
 
             // Save original for customer to take home
             var original = await SaveFromStream(stream);
+            info.Versions.Add(new ImageVersion(ImageVersions.Original, original));
+            
 
             // Resize for the slide-show if image is too big
             var resized = original;
             if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))
             {
                 resized = await SaveFromStream(stream);
+                info.Versions.Add(new ImageVersion(ImageVersions.Resized, resized));
             }
 
             // Resize for the thumbnail
@@ -84,12 +89,8 @@ namespace PartyWifi.Server.Components
             if(ResizeIfNecessary(stream, 150, 150))
             {
                 thumbnail = await SaveFromStream(stream);
+                info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, thumbnail));
             }
-
-            // Set hashes on model
-            info.Resized = resized;
-            info.Original = original;
-            info.Thumbnail = thumbnail;
 
             // Add and publish
             _images.Add(info);
