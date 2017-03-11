@@ -62,7 +62,7 @@ namespace PartyWifi.Server.Components
         public async Task Add(string name, Stream stream)
         {
             // Prepare model
-            var id = Guid.NewGuid().ToString().Split('-')[0];
+            var id = Guid.NewGuid().ToString();
             var info = new ImageInfo
             {
                 Id = id,
