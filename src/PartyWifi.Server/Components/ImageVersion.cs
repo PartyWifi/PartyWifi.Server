@@ -24,15 +24,15 @@ namespace PartyWifi.Server.Components
     ///<summary>
     /// Versions of the image
     ///</summary>
-    public struct ImageVersion
+    public class ImageVersion
     {
         ///<summary>
         /// Create new image version
         ///</summary>
-        public ImageVersion(ImageVersions version, string hash)
+        public ImageVersion(ImageVersions version, string imageHash)
         {
             Version = version;
-            ImageHash = hash;
+            ImageHash = imageHash;
         }
 
         ///<summary>

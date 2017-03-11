@@ -73,9 +73,14 @@ namespace PartyWifi.Server
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                routes
+                    .MapRoute( // Special route to load different versions of images
+                        name: "image",
+                        template: "image/{version}/{id}",
+                        defaults: new { controller = "Image", action = "Load" })
+                    .MapRoute( // Default route mapped to controller and action
+                        name: "default",
+                        template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             app.UseSwagger();
