@@ -38,7 +38,7 @@ namespace PartyWifi.Server.Components
         /// <summary>
         /// Upload a new image
         /// </summary>
-        Task Add(Stream stream);
+        Task Add(string name, Stream stream);
 
         /// <summary>
         /// Open image stream with this hash

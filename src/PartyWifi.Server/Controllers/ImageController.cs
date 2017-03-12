@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PartyWifi.Server.Components;
 
@@ -12,29 +13,16 @@ namespace PartyWifi.Server
             _manager = manager;
         }
 
-
-        public ActionResult Original(string id)
+        /// <summary>
+        /// Load special version of an image
+        /// <summary>
+        public ActionResult Load(ImageVersions version, string id)
         {
             var image = _manager.Get(id);
-            var stream = _manager.Open(image.Original);
+            var imageVersion = image.Versions.First(v => v.Version == version);
 
-            return File(stream, "image/jpeg");;
-        }
-
-        public ActionResult Resized(string id)
-        {
-            var image = _manager.Get(id);
-            var stream = _manager.Open(image.Resized);
-
-            return File(stream, "image/jpeg");;
-        }
-
-        public ActionResult Thumbnail(string id)
-        {
-            var image = _manager.Get(id);
-            var stream = _manager.Open(image.Thumbnail);
-
-            return File(stream, "image/jpeg");;
+            var stream = _manager.Open(imageVersion.ImageHash);
+            return File(stream, "image/jpeg");
         }
     }
 }
