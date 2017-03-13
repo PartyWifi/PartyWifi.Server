@@ -4,7 +4,7 @@ namespace PartyWifi.Server.Models
 {
     public class FileListEntry
     {
-        public string Name { get; set; }
+        public string Id { get; set; }
 
         public long Size { get; set; }
 

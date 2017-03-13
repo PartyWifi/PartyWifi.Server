@@ -59,14 +59,13 @@ namespace PartyWifi.Server.Components
             return _images.Skip(start).Take(count).ToArray();
         }
 
-        public async Task Add(string name, Stream stream)
+        public async Task Add(Stream stream)
         {
             // Prepare model
             var id = Guid.NewGuid().ToString();
             var info = new ImageInfo
             {
                 Id = id,
-                Name = name,
                 Size = stream.Length,
                 UploadDate = DateTime.Now
             };

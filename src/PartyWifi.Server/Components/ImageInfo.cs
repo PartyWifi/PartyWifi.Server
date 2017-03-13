@@ -23,11 +23,6 @@ namespace PartyWifi.Server.Components
         /// </summary>
         public string Id { get; set; }
 
-        ///<summary>
-        /// Name of the image
-        ///</summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// Size of the original
         /// </summary>
