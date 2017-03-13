@@ -11,7 +11,7 @@ namespace PartyWifi.Server.Components
     public class ImageInfo
     {
         /// <summary>
-        /// Prepare <see cref="ImageInfo"> and initialize versions
+        /// Prepare <see cref="ImageInfo" /> and initialize versions
         /// </summary>
         public ImageInfo()
         {
@@ -53,7 +53,7 @@ namespace PartyWifi.Server.Components
         /// </summary>
         public void SaveTo(string directory)
         {
-            var fileName = Path.Combine(directory, Id); // Use first block of id as file name
+            var fileName = Path.Combine(directory, $"{Id}.json"); // Use first block of id as file name
             var json = JsonConvert.SerializeObject(this, new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented
@@ -62,11 +62,10 @@ namespace PartyWifi.Server.Components
         }
 
         ///<summary>
-        /// Load <see cref="ImageInfo"> from given file
+        /// Load <see cref="ImageInfo" /> from given file
         ///</summary>
         public static ImageInfo FromFile(string filePath)
         {
-            var id = Path.GetFileName(filePath);
             var json = File.ReadAllText(filePath);
             return JsonConvert.DeserializeObject<ImageInfo>(json);
         }

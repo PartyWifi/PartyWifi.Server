@@ -34,7 +34,8 @@ namespace PartyWifi.Server.Controllers
                     await file.CopyToAsync(memoryStream);
                     memoryStream.Position = 0;
 
-                    await _imageManager.Add(file.FileName, memoryStream);
+                    var fileName = Path.GetFileName(file.FileName);
+                    await _imageManager.Add(fileName, memoryStream);
                 }
             }
 

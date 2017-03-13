@@ -75,7 +75,6 @@ namespace PartyWifi.Server.Components
             var original = await SaveFromStream(stream);
             info.Versions.Add(new ImageVersion(ImageVersions.Original, original));
             
-
             // Resize for the slide-show if image is too big
             var resized = original;
             if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))

@@ -15,7 +15,7 @@ namespace PartyWifi.Server
 
         /// <summary>
         /// Load special version of an image
-        /// <summary>
+        /// </summary>
         public ActionResult Load(ImageVersions version, string id)
         {
             var image = _manager.Get(id);
