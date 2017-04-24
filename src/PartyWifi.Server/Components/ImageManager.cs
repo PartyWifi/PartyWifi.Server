@@ -149,7 +149,7 @@ namespace PartyWifi.Server.Components
         /// </returns>
         private bool ResizeIfNecessary(Stream memoryStream, int width, int height)
         {
-            using (var image = new Image(memoryStream))
+            using (var image = Image.Load(memoryStream))
             {
                 var widthScale = image.Width / (double)width;
                 var heightScale = image.Height / (double)height;

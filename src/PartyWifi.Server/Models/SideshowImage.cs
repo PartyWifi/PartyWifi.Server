@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PartyWifi.Server.Models
+﻿namespace PartyWifi.Server.Models
 {
     /// <summary>
     /// Initialize the slideshow UI
