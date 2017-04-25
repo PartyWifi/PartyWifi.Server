@@ -81,6 +81,10 @@ namespace PartyWifi.Server.Components
                 resized = await SaveFromStream(stream);
                 info.Versions.Add(new ImageVersion(ImageVersions.Resized, resized));
             }
+            else
+            {
+                info.Versions.Add(new ImageVersion(ImageVersions.Resized, original));
+            }
 
             // Resize for the thumbnail
             var thumbnail = original;
