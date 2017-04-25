@@ -16,19 +16,6 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/site.min.js",
-    "inputFiles": [
-      "wwwroot/js/site.js"
-    ],
-    // Optionally specify minification options
-    "minify": {
-      "enabled": true,
-      "renameLocals": true
-    },
-    // Optinally generate .map file
-    "sourceMap": false
-  },
-  {
     "outputFileName": "wwwroot/js/slideshow.min.js",
     "inputFiles": [
       "wwwroot/js/slideshow.js"
