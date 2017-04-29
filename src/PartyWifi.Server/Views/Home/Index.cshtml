@@ -4,3 +4,141 @@
 }
 
 <h2>Willkommen</h2>
+
+Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
+
+<style>
+    input[type="file"]#upload-input {
+        display: none;
+    }
+
+    .fileList {
+
+    }
+
+    .fileList img {
+        width: 200px;
+        padding: 5px;
+    }
+</style>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <label class="btn btn-primary btn-lg">
+        <input id="upload-input" type="file" multiple>
+        Auswählen oder Aufnehmen
+    </label>
+
+    <button id="btn-submit" class="btn btn-success">Hochladen</button>
+</form>
+
+<div class="progress">
+  <div id="progress" class="progress-bar progress-bar-success active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:00%"></div>
+</div>
+
+<div class="fileList"></div>
+
+<div id="image-template" style="display: none">
+    <img class="img-thumbnail" />
+</div>
+
+<script>
+    var uploadInput = $("#upload-input");
+    var submitBtn = $('#btn-submit');
+    var fileList = $('.fileList');
+    var imageTemplate = $('#image-template');
+    var progress = $('#progress');
+
+    var enableUpload = function() {
+        submitBtn.prop("disabled", false);
+        submitBtn.removeClass("disabled");
+    }
+
+    var disableUpload = function() {
+        submitBtn.addClass("disabled");
+        submitBtn.prop("disabled", true);
+    }
+
+    disableUpload();
+    
+    uploadInput.on('change', function() {
+        var files = uploadInput.prop("files");
+
+        if (files.length > 0) {
+            enableUpload();
+        }
+        else {
+            disableUpload();
+        }
+
+        fileList.empty();
+
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var imageBlock = imageTemplate.clone();
+                imageBlock.css("display: block");
+                var image = imageBlock.children("img");
+                image.attr("src", e.target.result);
+
+                fileList.append(imageBlock.html());
+            }
+
+            reader.readAsDataURL(file);
+        }
+
+    });
+
+    $('#uploadForm').on('submit', function(event) {
+        event.stopPropagation(); // Stop stuff happening
+        event.preventDefault(); // Totally stop stuff happening
+
+        // Disable upload button to avoid double upload and reset progress
+        disableUpload();
+        progress.css("width", "0%");
+
+        var files = uploadInput.prop("files");
+
+        var data = new FormData();
+        for (var i = 0; i < files.length ; i++) {
+            data.append(files[i].name, files[i]);
+        }
+
+        $.ajax({
+            url: '/image/add',
+            type: 'POST',
+            data: data,
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            xhr: function() {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if(myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', function(e) {
+                            if(e.lengthComputable){
+                                var max = e.total;
+                                var current = e.loaded;
+
+                                var percentage = (current * 100)/max;
+                                progress.css("width", percentage + "%");
+
+
+                                if(percentage >= 100)
+                                {
+                                // process completed  
+                                }
+                            }  
+                        }, false);
+                    }
+                    return myXhr;
+            },
+        })
+        .done(function() {
+            
+        })
+        .fail(function(e) {
+            // Enable again so user can try again
+            enableUpload();
+        })
+    });
+</script>

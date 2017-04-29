@@ -1,4 +1,6 @@
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PartyWifi.Server.Components;
 
@@ -23,6 +25,25 @@ namespace PartyWifi.Server
 
             var stream = _manager.Open(imageVersion.ImageHash);
             return File(stream, "image/jpeg");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add()
+        {
+            var files = Request.Form.Files;
+            foreach (var file in files)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    // Copy to memory first
+                    await file.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
+
+                    await _manager.Add(memoryStream);
+                }
+            }
+
+            return Ok();
         }
     }
 }
