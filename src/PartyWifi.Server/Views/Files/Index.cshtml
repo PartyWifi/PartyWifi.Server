@@ -1,0 +1,32 @@
+﻿@model PartyWifi.Server.Models.FileList
+
+@{
+    ViewBag.Title = "Datei-Liste";
+    Layout = "_Layout";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@Html.Partial("Pagination", Model)
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Bild</th>
+        <th class="hidden-xs hidden-sm">Id</th>
+        <th>Größe</th>
+        <th class="hidden-xs hidden-sm">Datum</th>
+        <th>Download</th>
+    </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var file in Model.Files)
+            {
+                @Html.Partial("FileEntry", file)
+            }
+        }
+    </tbody>
+</table>
+
+@Html.Partial("Pagination", Model)

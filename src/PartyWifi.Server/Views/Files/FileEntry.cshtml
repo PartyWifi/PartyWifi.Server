@@ -1,0 +1,27 @@
+@model PartyWifi.Server.Models.FileListEntry
+
+@{
+    var units = new [] {"B", "KB", "MB"};
+    var power = 0;
+    var size = (double)Model.Size;
+    while (size >= 1024)
+    {
+        power++;
+        size /= 1024;  
+    }
+}
+<tr>
+    <td>
+      <a target="_blank" href="/image/original/@Model.Id">
+        <img width="155" src="/image/thumbnail/@Model.Id"/>
+      </a>
+    </td>
+    <td class="hidden-xs hidden-sm">@Model.Id</td>
+    <td>@size.ToString("F2") @units[power]</td>
+    <td class="hidden-xs hidden-sm">@Model.UploadDate</td>
+    <td>
+      <a class="btn btn-lg" href="/image/original/@Model.Id" download>
+        <span class="glyphicon glyphicon-download-alt"></span>
+      </a>
+    </td>
+</tr>

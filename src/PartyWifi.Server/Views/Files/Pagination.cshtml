@@ -1,0 +1,62 @@
+@model PartyWifi.Server.Models.FileList
+
+@{
+  var total = Model.Pages > 10 ? 10 : Model.Pages;
+  // Calculate our pages
+  var range = 9;
+  var start = Model.CurrentPage;
+  var end = start;
+  // Move start and end away from current page till range is used up
+  while (range > 0 && (start > 1 || end < Model.Pages))
+  {
+      if (range > 0 && start > 1)
+      {
+          range--;
+          start--;
+      }
+      if (range > 0 && end < Model.Pages)
+      {
+          range--;
+          end++;
+      }
+  }
+
+  // Cut start or end to display full range
+  if (start > 1)
+  {
+    start+=2;
+  }
+  if (end < Model.Pages)
+  {
+    end-=2;
+  }
+}
+
+<div class="row">
+  <div class="center-block" style="width: @(35 * total)px">
+    <ul class="pagination">
+      @{        
+          // Dispay page 1 and two dots if current range does not cover it
+          if (start > 1)
+          {
+              <li><a href="/files/page/1">1</a></li>
+              <li><a href="/files/page/@(start - 1)">..</a></li>
+          }
+
+          // Render the range of pages
+          for (var i=start; i <= end; i++)
+          {
+              var active = i == Model.CurrentPage ? "class=active" : "";
+              <li @active><a href="/files/page/@i">@i</a></li>
+          }
+
+          // Dispay two dots and total number of pages if current range does not cover it
+          if (end < Model.Pages)
+          {
+              <li><a href="/files/page/@(end + 1)">..</a></li>
+              <li><a href="/files/page/@Model.Pages">@Model.Pages</a></li>
+          }
+      }
+    </ul>
+  </div>
+</div>

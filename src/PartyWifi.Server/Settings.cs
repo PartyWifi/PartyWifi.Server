@@ -24,5 +24,10 @@ namespace PartyWifi.Server
         /// Image rotation time in seconds
         /// </summary>
         public int ImageRotationSec { get; set; }
+
+        /// <summary>
+        /// Number of images per page in the file list
+        /// </summary>
+        public int ImagesPerPage {get; set;}
     }
 }
