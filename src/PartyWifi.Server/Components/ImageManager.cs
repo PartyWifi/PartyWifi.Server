@@ -79,20 +79,16 @@ namespace PartyWifi.Server.Components
             if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))
             {
                 resized = await SaveFromStream(stream);
-                info.Versions.Add(new ImageVersion(ImageVersions.Resized, resized));
             }
-            else
-            {
-                info.Versions.Add(new ImageVersion(ImageVersions.Resized, original));
-            }
+            info.Versions.Add(new ImageVersion(ImageVersions.Resized, resized));
 
             // Resize for the thumbnail
             var thumbnail = original;
             if(ResizeIfNecessary(stream, 150, 150))
             {
                 thumbnail = await SaveFromStream(stream);
-                info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, thumbnail));
             }
+            info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, thumbnail));
 
             // Add and publish
             _images.Add(info);
