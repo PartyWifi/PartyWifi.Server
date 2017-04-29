@@ -23,9 +23,10 @@ namespace PartyWifi.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(ICollection<IFormFile> files)
+        public async Task<IActionResult> UploadFilesAjax()
         {
-            foreach (var file in files.Where(file => file.Length > 0))
+            var files = Request.Form.Files;
+            foreach (var file in files)
             {
                 using (var memoryStream = new MemoryStream())
                 {
@@ -37,7 +38,7 @@ namespace PartyWifi.Server.Controllers
                 }
             }
 
-            return View();
+            return Ok();
         }
     }
 }
