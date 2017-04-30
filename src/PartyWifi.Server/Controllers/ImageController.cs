@@ -27,6 +27,9 @@ namespace PartyWifi.Server
             return File(stream, "image/jpeg");
         }
 
+        /// <summary>
+        /// Adds a new image from the post form files
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Add()
         {

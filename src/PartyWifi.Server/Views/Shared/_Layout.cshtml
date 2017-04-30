@@ -7,20 +7,15 @@
     <title>@ViewData["Title"] - PartyWifi</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
-
-        <script src="~/lib/jquery/dist/jquery.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
     </environment>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src='~/lib/knockout/dist/knockout.js'></script>
 </head>
 <body>
     <div class="container">
@@ -55,16 +50,7 @@
         </div>
     </div>
 
-        <environment names="Development">
-            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        </environment>
-        <environment names="Staging,Production">
-            <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
-                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-            </script>
-        </environment>
-
-        @RenderSection("scripts", required: false)
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>

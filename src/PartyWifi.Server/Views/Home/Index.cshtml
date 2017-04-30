@@ -12,133 +12,142 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
         display: none;
     }
 
-    .fileList {
-
-    }
-
     .fileList img {
         width: 200px;
         padding: 5px;
     }
 </style>
 
-<form id="uploadForm" enctype="multipart/form-data">
+<form enctype="multipart/form-data" data-bind="submit: uploadImages">
     <label class="btn btn-primary btn-lg">
-        <input id="upload-input" type="file" multiple>
+        <input id="upload-input" type="file" data-bind="event:{ change: onFileSelectedEvent }" multiple>
         Auswählen oder Aufnehmen
     </label>
 
-    <button id="btn-submit" class="btn btn-success">Hochladen</button>
+    <button id="btn-submit" class="btn btn-success" data-bind="enable: uploadPossible">Hochladen</button>
 </form>
 
-<div class="progress">
-  <div id="progress" class="progress-bar progress-bar-success active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:00%"></div>
-</div>
-
-<div class="fileList"></div>
-
-<div id="image-template" style="display: none">
-    <img class="img-thumbnail" />
+<div class="fileList">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th width="150px">Bild</th>
+                <th>Status</th>
+                <th>Aktion</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: imageUploads">
+        <tr>
+            <td><img data-bind="attr:{src: data}" /></td>
+            <td>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-bind="style: { width: progress + '%' }">
+                    </div>
+                </div>
+                <span data-bind="text: progress">% complete</span>
+            </td>
+            <td>
+                <button class="btn btn-primary" data-bind="click: $parent.uploadImage">
+                    <i class="glyphicon glyphicon-upload"></i> Hochladen
+                </button>
+                <button class="btn btn-danger" data-bind="click: $parent.removeImage">
+                    <i class="glyphicon glyphicon-remove"></i> Entfernen
+                </button>
+            </td>
+        </tr>    
+    </tbody>
+    </table>
 </div>
 
 <script>
-    var uploadInput = $("#upload-input");
-    var submitBtn = $('#btn-submit');
-    var fileList = $('.fileList');
-    var imageTemplate = $('#image-template');
-    var progress = $('#progress');
+    function ImageUpload(file) {
+        var self = this;
+        self.file = file;
+        self.data = ko.observable();
+        self.progress = ko.observable(0.0);
 
-    var enableUpload = function() {
-        submitBtn.prop("disabled", false);
-        submitBtn.removeClass("disabled");
-    }
-
-    var disableUpload = function() {
-        submitBtn.addClass("disabled");
-        submitBtn.prop("disabled", true);
-    }
-
-    disableUpload();
-    
-    uploadInput.on('change', function() {
-        var files = uploadInput.prop("files");
-
-        if (files.length > 0) {
-            enableUpload();
-        }
-        else {
-            disableUpload();
-        }
-
-        fileList.empty();
-
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
+        self.loadPreview = function() {
             var reader = new FileReader();
-
             reader.onload = function(e) {
-                var imageBlock = imageTemplate.clone();
-                imageBlock.css("display: block");
-                var image = imageBlock.children("img");
-                image.attr("src", e.target.result);
-
-                fileList.append(imageBlock.html());
+                self.data(e.target.result);
             }
-
             reader.readAsDataURL(file);
         }
 
-    });
+        self.upload = function(successCallback, failureCallback) {
+            //self.progress(50);
+            //return;
+            var data = new FormData();
+            data.append(self.file.name, self.file);
 
-    $('#uploadForm').on('submit', function(event) {
-        event.stopPropagation(); // Stop stuff happening
-        event.preventDefault(); // Totally stop stuff happening
-
-        // Disable upload button to avoid double upload and reset progress
-        disableUpload();
-        progress.css("width", "0%");
-
-        var files = uploadInput.prop("files");
-
-        var data = new FormData();
-        for (var i = 0; i < files.length ; i++) {
-            data.append(files[i].name, files[i]);
-        }
-
-        $.ajax({
-            url: '/image/add',
-            type: 'POST',
-            data: data,
-            processData: false, // Don't process the files
-            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-            xhr: function() {
+            $.ajax({
+                url: '/image/add',
+                type: 'POST',
+                data: data,
+                processData: false, 
+                contentType: false,
+                xhr: function() {
                     var myXhr = $.ajaxSettings.xhr();
-                    if(myXhr.upload) {
+                    if (myXhr.upload) {
                         myXhr.upload.addEventListener('progress', function(e) {
-                            if(e.lengthComputable){
-                                var max = e.total;
-                                var current = e.loaded;
-
-                                var percentage = (current * 100)/max;
-                                progress.css("width", percentage + "%");
-
-
-                                if(percentage >= 100)
-                                {
-                                // process completed  
-                                }
+                            if (e.lengthComputable) {
+                                var percentage = (e.loaded * 100)/e.total;
+                                self.progress(percentage);
                             }  
                         }, false);
                     }
                     return myXhr;
-            },
-        })
-        .done(function() {
-            
-        })
-        .fail(function(e) {
-            // Enable again so user can try again
-            enableUpload();
-        })
-    });
+                },
+            })
+            .done(function() {
+                successCallback(self);
+            })
+            .fail(function() {
+                failureCallback(self);
+            });
+        }
+    }
+
+    function UploadViewModel() {
+        var self = this;
+
+        self.imageUploads = ko.observableArray();
+        self.uploadPossible = ko.computed(function() {
+            return self.imageUploads().length > 0;
+        });
+
+        self.onFileSelectedEvent = function(vm, evt) {
+            self.imageUploads([]);
+            ko.utils.arrayForEach(evt.target.files, function(file) {
+                var upload = new ImageUpload(file);
+                upload.loadPreview();
+                self.imageUploads.push(upload);
+            });
+        }
+
+        self.uploadImage = function(image) {
+            var onSuccessUpload = function(image) {
+                self.removeImage(image);
+            }
+
+            var onFailUpload = function(image) {
+                alert("handle fail...");
+            }
+
+            image.upload(onSuccessUpload, onFailUpload);
+        }
+
+        self.uploadImages = function() {
+            for (var i = 0; i < self.imageUploads().length; i++){
+                var next = self.imageUploads()[i];
+                self.uploadImage(next);
+            }
+        }
+
+        self.removeImage = function(image) {
+            self.imageUploads.remove(image);
+        };
+    }
+
+    ko.applyBindings(new UploadViewModel());
 </script>
