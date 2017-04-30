@@ -12,52 +12,67 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
         display: none;
     }
 
-    .fileList img {
-        width: 200px;
-        padding: 5px;
+    .uploadForm {
+        margin: 10px;
+        text-align: center;
+    }
+
+    .fileList {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .fileList .imageContainer .preview {
+        width: 260px;
+        margin: 5px;
+    }
+
+    .fileList .imageContainer {
+        display:inline-block;
+        border:1px solid lightgray;
+
+    }
+
+    .fileList .imageContainer .imageActions {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: center;
     }
 </style>
 
-<form enctype="multipart/form-data" data-bind="submit: uploadImages">
+<form class="uploadForm" enctype="multipart/form-data" data-bind="submit: uploadImages">
     <label class="btn btn-primary btn-lg">
         <input id="upload-input" type="file" data-bind="event:{ change: onFileSelectedEvent }" multiple>
-        Auswählen oder Aufnehmen
+        Auswählen
     </label>
 
-    <button id="btn-submit" class="btn btn-success" data-bind="enable: uploadPossible">Hochladen</button>
+    <button id="btn-submit" class="btn btn-success btn-lg" data-bind="enable: uploadPossible">
+        <span data-bind="text: imageUploads().length"></span> Hochladen
+    </button>
 </form>
 
 <div class="fileList">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th width="150px">Bild</th>
-                <th>Status</th>
-                <th>Aktion</th>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: imageUploads">
-        <tr>
-            <td><img data-bind="attr:{src: data}" /></td>
-            <td>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" data-bind="style: { width: progress() + '%' }, attr: { 'aria-valuenow': progress() }"  aria-valuemin="0" aria-valuemax="100" >
-                        <span data-bind="text: progress() + ' %'"></span>
-                    </div>
-                </div>
-                <span data-bind="text: progress">% complete</span>
-            </td>
-            <td>
+    <div data-bind="foreach: imageUploads">
+        <div class="imageContainer">
+            <a class="imageLink" data-bind="attr: { 'href': data }">
+                <img class="preview" data-bind="attr:{src: data}" />
+            </a>
+            <div class="imageActions">
                 <button class="btn btn-primary" data-bind="click: $parent.uploadImage">
                     <i class="glyphicon glyphicon-upload"></i> Hochladen
                 </button>
                 <button class="btn btn-danger" data-bind="click: $parent.removeImage">
                     <i class="glyphicon glyphicon-remove"></i> Entfernen
                 </button>
-            </td>
-        </tr>    
-    </tbody>
-    </table>
+            </div>
+        </div>
+    </div>
+    <!--<div class="progress">
+        <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" data-bind="style: { width: progress() + '%' }, attr: { 'aria-valuenow': progress() }"  aria-valuemin="0" aria-valuemax="100" >
+            <span data-bind="text: progress() + ' %'"></span>
+        </div>
+    </div>-->
+
 </div>
 
 <script>
@@ -122,6 +137,8 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
                 upload.loadPreview();
                 self.imageUploads.push(upload);
             });
+
+            $('.imageLink').magnificPopup({type:'image'});
         }
 
         self.uploadImage = function(image) {
