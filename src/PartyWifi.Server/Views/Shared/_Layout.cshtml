@@ -13,11 +13,12 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/lib/magnific-popup/dist/magnific-popup.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    @RenderSection("styles", required: false)
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src='~/lib/knockout/dist/knockout.js'></script>
-    <script src='~/lib/magnific-popup/dist/jquery.magnific-popup.min.js'></script>
 </head>
 <body>
     <div class="container">

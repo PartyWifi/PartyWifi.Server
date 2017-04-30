@@ -3,29 +3,42 @@
 [
   {
     "outputFileName": "wwwroot/css/site.min.css",
-    // An array of relative input file paths. Globbing patterns supported
     "inputFiles": [
       "wwwroot/css/site.css"
     ]
   },
   {
+    "outputFileName": "wwwroot/css/upload.min.css",
+    "inputFiles": [
+      "wwwroot/css/upload.css"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/css/slideshow.min.css",
-    // An array of relative input file paths. Globbing patterns supported
     "inputFiles": [
       "wwwroot/css/slideshow.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/upload.min.js",
+    "inputFiles": [
+      "wwwroot/js/upload.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
   },
   {
     "outputFileName": "wwwroot/js/slideshow.min.js",
     "inputFiles": [
       "wwwroot/js/slideshow.js"
     ],
-    // Optionally specify minification options
     "minify": {
       "enabled": true,
       "renameLocals": true
     },
-    // Optinally generate .map file
     "sourceMap": false
   }
 ]

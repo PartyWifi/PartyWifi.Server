@@ -1,0 +1,40 @@
+input[type="file"]#upload-input {
+    display: none;
+}
+
+.upload-form {
+    margin: 10px;
+    text-align: center;
+}
+
+.file-list {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.file-list .image-container {
+    display:inline-block;
+    border:1px solid lightgray;
+    padding:5px;
+    margin-bottom: 5px;
+}
+
+.file-list .image-container .preview {
+    width: 260px;
+}
+
+.file-list .image-container .image-actions {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+    height: 40px;
+}
+
+.file-list .image-container .image-actions .action-buttons {
+
+}
+
+.file-list .image-container .image-actions .progress {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
