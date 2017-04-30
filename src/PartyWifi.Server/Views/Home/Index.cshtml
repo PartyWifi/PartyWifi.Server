@@ -41,7 +41,8 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
             <td><img data-bind="attr:{src: data}" /></td>
             <td>
                 <div class="progress">
-                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-bind="style: { width: progress + '%' }">
+                    <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" data-bind="style: { width: progress() + '%' }, attr: { 'aria-valuenow': progress() }"  aria-valuemin="0" aria-valuemax="100" >
+                        <span data-bind="text: progress() + ' %'"></span>
                     </div>
                 </div>
                 <span data-bind="text: progress">% complete</span>
@@ -64,7 +65,7 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
         var self = this;
         self.file = file;
         self.data = ko.observable();
-        self.progress = ko.observable(0.0);
+        self.progress = ko.observable(0.00);
 
         self.loadPreview = function() {
             var reader = new FileReader();
@@ -75,8 +76,6 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
         }
 
         self.upload = function(successCallback, failureCallback) {
-            //self.progress(50);
-            //return;
             var data = new FormData();
             data.append(self.file.name, self.file);
 
@@ -92,7 +91,7 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
                         myXhr.upload.addEventListener('progress', function(e) {
                             if (e.lengthComputable) {
                                 var percentage = (e.loaded * 100)/e.total;
-                                self.progress(percentage);
+                                self.progress(Math.round(percentage * 100) / 100);
                             }  
                         }, false);
                     }
