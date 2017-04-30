@@ -13,8 +13,11 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    @RenderSection("styles", required: false)
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src='~/lib/knockout/dist/knockout.js'></script>
 </head>
 <body>
