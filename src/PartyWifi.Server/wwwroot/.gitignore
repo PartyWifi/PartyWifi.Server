@@ -1,5 +1,4 @@
 lib
 uploads
-resized
-js/*.min.*
-css/*.min.*
+js/*.min.js
+css/*.css

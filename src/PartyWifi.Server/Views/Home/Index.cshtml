@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Start";
     Layout = "_Layout";
 }
 
@@ -8,7 +8,7 @@
 Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
 
 <form class="upload-form" enctype="multipart/form-data" data-bind="submit: uploadImages">
-    <label class="btn btn-primary btn-lg">
+    <label class="btn btn-primary btn-lg upload-label">
         <input id="upload-input" type="file" data-bind="event:{ change: onFileSelectedEvent }" multiple>
         Auswählen
     </label>
@@ -43,13 +43,6 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
     </div>
 </div>
 
-@section styles {
-    <link rel="stylesheet" href="~/lib/magnific-popup/dist/magnific-popup.css">
-    <link rel="stylesheet" href="~/lib/animate.css/animate.min.css">
-    <link rel="stylesheet" href="~/css/upload.css">
-}
-
 @section scripts {
-    <script src='~/lib/magnific-popup/dist/jquery.magnific-popup.min.js'></script>
     <script src="~/js/upload.js"></script>
 }

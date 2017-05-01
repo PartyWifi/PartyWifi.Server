@@ -1,49 +1,51 @@
-﻿@using System.Threading.Tasks
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="de">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>@ViewData["Title"] - PartyWifi</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/partywifi.css" />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/partywifi.min.css" asp-append-version="true" />
     </environment>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="~/lib/animate.css/animate.min.css">
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css">
 
     @RenderSection("styles", required: false)
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src='~/lib/knockout/dist/knockout.js'></script>
 </head>
 <body>
     <div class="container">
-        <div class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">PartyWifi</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a asp-area="" asp-controller="Files" asp-action="Index">Dateien</a></li>
-                        <li><a asp-area="" asp-controller="Admin" asp-action="Index">Verwalten</a></li>
+        <nav class="navbar navbar-light bg-faded rounded navbar-toggleable-md">
+            <div class="container">
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsContainer" aria-controls="navbarsContainer" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PartyWifi</a>
+
+                <div class="collapse navbar-collapse" id="navbarsContainer">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Files" asp-action="Index">
+                                <i class="fa fa-picture-o" aria-hidden="true"></i> Dateien
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">
+                                <i class="fa fa-cogs" aria-hidden="true"></i> Verwalten
+                            </a>
+                        </li>
                     </ul>
-                    <!--ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Link</a></li>
-                    </ul-->
                 </div>
             </div>
-        </div>
+        </nav>
+
         <div class="container body-content">
             @RenderBody()
             <hr />
@@ -53,7 +55,20 @@
         </div>
     </div>
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- jQuery -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="~/lib/tether/js/tether.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Knockout -->
+    <script src='~/lib/knockout/knockout-latest.js'></script>
+
+    <!-- Magnific Popup -->
+    <script src='~/lib/magnific-popup/jquery.magnific-popup.min.js'></script>
+
+    <!-- Other scripts -->
     @RenderSection("scripts", required: false)
 </body>
 </html>
