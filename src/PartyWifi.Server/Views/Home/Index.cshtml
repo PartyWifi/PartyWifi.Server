@@ -19,12 +19,12 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
 <div class="image-uploader animated zoomIn" data-bind="visible: true" style="display: none;">
     <form class="upload-form" enctype="multipart/form-data" data-bind="submit: uploadImages">
         <label class="btn btn-primary btn-lg upload-label">
-            <input type="file" data-bind="event:{ change: onFileSelectedEvent }" multiple>
-            Auswählen
+            <input type="file" data-bind="event:{ change: onFileSelectedEvent }" multiple accept="image/jpeg, image/png">
+            <i class="fa fa-picture-o"></i> Wählen
         </label>
 
         <button type="submit" class="btn btn-success btn-lg" data-bind="enable: (imageUploads().length > 0 && isUploading() == false)">
-            <span data-bind="text: imageUploads().length"></span> Hochladen
+            <i class="fa fa-upload"></i> Senden 
         </button>
     </form>
 
@@ -41,12 +41,13 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
                 </a>
                 <div class="image-actions">
                     <div class="action-buttons" data-bind="visible: isUploading() == false">
-                        <button class="btn btn-primary" data-bind="click: $parent.uploadImage">
-                            <i class="fa fa-upload"></i> Senden
-                        </button>
                         <button class="btn btn-danger" data-bind="click: $parent.removeImage">
                             <i class="fa fa-times"></i> Löschen
                         </button>
+                        <button class="btn btn-success" data-bind="click: $parent.uploadImage">
+                            <i class="fa fa-upload"></i> Senden
+                        </button>
+                        
                     </div>
                     <div class="progress" data-bind="visible: isUploading()">
                         <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" data-bind="style: { width: progress() + '%' }, attr: { 'aria-valuenow': progress() }"  aria-valuemin="0" aria-valuemax="100" >
