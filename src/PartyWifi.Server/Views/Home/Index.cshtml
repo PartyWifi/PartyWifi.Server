@@ -33,9 +33,9 @@ Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
         <span class="sr-only">Lade...</span>
     </div>
 
-    <div class="file-list">
+    <div class="file-list" data-bind="visible: isLoadingFileList() == false">
         <div data-bind="foreach: imageUploads">
-            <div class="image-container animated zoomIn">
+            <div class="image-container animated fadeIn">
                 <a class="image-link" data-bind="attr: { 'href': data }">
                     <img class="preview" data-bind="attr:{src: data}" />
                 </a>
