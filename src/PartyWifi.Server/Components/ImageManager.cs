@@ -44,19 +44,20 @@ namespace PartyWifi.Server.Components
 
         public ImageInfo Get(int index)
         {
-            var info = _images[index];
-            return info;
+            lock(_images) 
+                return _images[index];
         }
 
         public ImageInfo Get(string imageId)
         {
-            var info = _images.First(i => i.Id.Equals(imageId));
-            return info;
+            lock(_images) 
+                return _images.First(i => i.Id.Equals(imageId));
         }
 
         public ImageInfo[] GetRange(int start, int count)
         {
-            return _images.Skip(start).Take(count).ToArray();
+            lock(_images) 
+                return _images.Skip(start).Take(count).ToArray();
         }
 
         public async Task Add(Stream stream)
@@ -73,7 +74,7 @@ namespace PartyWifi.Server.Components
             // Save original for customer to take home
             var original = await SaveFromStream(stream);
             info.Versions.Add(new ImageVersion(ImageVersions.Original, original));
-            
+
             // Resize for the slide-show if image is too big
             var resized = original;
             if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))
@@ -84,14 +85,16 @@ namespace PartyWifi.Server.Components
 
             // Resize for the thumbnail
             var thumbnail = original;
-            if(ResizeIfNecessary(stream, 150, 150))
+            if (ResizeIfNecessary(stream, 150, 150))
             {
                 thumbnail = await SaveFromStream(stream);
             }
             info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, thumbnail));
 
             // Add and publish
-            _images.Add(info);
+            lock (_images)
+                _images.Add(info);
+
             RaiseAdded(info);
 
             // Save info as well
