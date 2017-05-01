@@ -73,6 +73,14 @@
     <!-- Magnific Popup -->
     <script src='~/lib/magnific-popup/jquery.magnific-popup.min.js'></script>
 
+    <!-- PartyWifi -->
+    <environment names="Development">
+        <script src='~/js/partywifi.js'></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src='~/js/partywifi.min.js'></script>
+    </environment>
+
     <!-- Other scripts -->
     @RenderSection("scripts", required: false)
 </body>
