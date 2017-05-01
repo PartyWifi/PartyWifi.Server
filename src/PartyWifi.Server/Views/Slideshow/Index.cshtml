@@ -19,18 +19,13 @@
         <img id="image" alt="SlideshowImage"/>
     </div>
 
+    <!-- jQuery -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+
     <environment names="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
         <script src="~/js/slideshow.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.4.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
         <script src="~/js/slideshow.min.js" asp-append-version="true"></script>
     </environment>
 </body>
