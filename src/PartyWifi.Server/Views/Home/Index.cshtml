@@ -3,46 +3,58 @@
     Layout = "_Layout";
 }
 
+@section scripts {
+    <script src="~/js/upload.js"></script>
+}
+
 <h2>Willkommen</h2>
 
 Bitte wählen Sie Ihre Bilder, die Sie mit den anderen Gästen teilen wollen.
 
-<form class="upload-form" enctype="multipart/form-data" data-bind="submit: uploadImages">
-    <label class="btn btn-primary btn-lg upload-label">
-        <input id="upload-input" type="file" data-bind="event:{ change: onFileSelectedEvent }" multiple>
-        Auswählen
-    </label>
+<div class="image-upload-spinner" data-bind="visible: false">
+    <i class="fa fa-spinner fa-pulse fa-4x fa-fw fa-4"></i>
+    <span class="sr-only">Lade...</span>
+</div>
 
-    <button id="btn-submit" class="btn btn-success btn-lg" data-bind="enable: uploadPossible">
-        <span data-bind="text: imageUploads().length"></span> Hochladen
-    </button>
-</form>
+<div class="image-uploader animated zoomIn" data-bind="visible: true" style="display: none;">
+    <form class="upload-form" enctype="multipart/form-data" data-bind="submit: uploadImages">
+        <label class="btn btn-primary btn-lg upload-label">
+            <input type="file" data-bind="event:{ change: onFileSelectedEvent }" multiple>
+            Auswählen
+        </label>
 
-<div class="file-list">
-    <div data-bind="foreach: imageUploads">
-        <div class="image-container animated fadeInLeft">
-            <a class="image-link" data-bind="attr: { 'href': data }">
-                <img class="preview" data-bind="attr:{src: data}" />
-            </a>
-            <div class="image-actions">
-                <div class="action-buttons" data-bind="visible: isUploading() == false">
-                    <button class="btn btn-primary" data-bind="click: $parent.uploadImage">
-                        <i class="glyphicon glyphicon-upload"></i> Hochladen
-                    </button>
-                    <button class="btn btn-danger" data-bind="click: $parent.removeImage">
-                        <i class="glyphicon glyphicon-remove"></i> Entfernen
-                    </button>
-                </div>
-                <div class="progress" data-bind="visible: isUploading()">
-                    <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" data-bind="style: { width: progress() + '%' }, attr: { 'aria-valuenow': progress() }"  aria-valuemin="0" aria-valuemax="100" >
-                        <span data-bind="text: progress() + ' %'"></span>
+        <button type="submit" class="btn btn-success btn-lg" data-bind="enable: (imageUploads().length > 0 && isUploading() == false)">
+            <span data-bind="text: imageUploads().length"></span> Hochladen
+        </button>
+    </form>
+
+    <div class="file-list-spinner" data-bind="visible: isLoadingFileList()">
+        <i class="fa fa-spinner fa-pulse fa-4x fa-fw fa-4"></i>
+        <span class="sr-only">Lade...</span>
+    </div>
+
+    <div class="file-list">
+        <div data-bind="foreach: imageUploads">
+            <div class="image-container animated zoomIn">
+                <a class="image-link" data-bind="attr: { 'href': data }">
+                    <img class="preview" data-bind="attr:{src: data}" />
+                </a>
+                <div class="image-actions">
+                    <div class="action-buttons" data-bind="visible: isUploading() == false">
+                        <button class="btn btn-primary" data-bind="click: $parent.uploadImage">
+                            <i class="fa fa-upload"></i> Senden
+                        </button>
+                        <button class="btn btn-danger" data-bind="click: $parent.removeImage">
+                            <i class="fa fa-times"></i> Löschen
+                        </button>
+                    </div>
+                    <div class="progress" data-bind="visible: isUploading()">
+                        <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" data-bind="style: { width: progress() + '%' }, attr: { 'aria-valuenow': progress() }"  aria-valuemin="0" aria-valuemax="100" >
+                            <span data-bind="text: progress() + ' %'"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@section scripts {
-    <script src="~/js/upload.js"></script>
-}

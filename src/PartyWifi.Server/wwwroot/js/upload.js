@@ -4,7 +4,7 @@ function ImageUpload(file) {
     self.data = ko.observable();
     self.progress = ko.observable(0.00);
     self.isUploading = ko.observable(false);
-
+    
     self.loadPreview = function(callback) {
         var reader = new FileReader();
         reader.onload = function(e) {
@@ -14,7 +14,7 @@ function ImageUpload(file) {
         reader.readAsDataURL(file);
     }
 
-    self.upload = function(successCallback, failureCallback) {
+    self.upload = function(successCallback, failureCallback, alwaysCallback) {
         self.isUploading(true);
         var data = new FormData();
         data.append(self.file.name, self.file);
@@ -38,6 +38,9 @@ function ImageUpload(file) {
                 return myXhr;
             },
         })
+        .always(function() {
+            alwaysCallback(self);
+        })
         .done(function() {
             successCallback(self);
         })
@@ -51,20 +54,27 @@ function UploadViewModel() {
     var self = this;
 
     self.imageUploads = ko.observableArray();
-    self.uploadPossible = ko.computed(function() {
-        return self.imageUploads().length > 0;
-    });
+    self.isUploading = ko.observable(false);
+    self.isLoadingFileList = ko.observable(false);
 
     self.onFileSelectedEvent = function(vm, evt) {
+        // clear current uploads - maybe add later
         self.imageUploads([]);
+        self.isLoadingFileList(true);
+        var loaded = [];
         var files = evt.target.files;
         ko.utils.arrayForEach(files, function(file) {
             var upload = new ImageUpload(file);
             upload.loadPreview(function() {
-                self.imageUploads.push(upload);
+                loaded.push(upload);
 
                 // if all images are pushed to the array, activate magnific popup
-                if (self.imageUploads().length == files.length){
+                if (loaded.length == files.length) {
+                    // disable busy indicator
+                    self.isLoadingFileList(false);
+                    // update file list
+                    self.imageUploads(loaded);
+                    // enable magnific popup
                     $('.image-link').magnificPopup({type:'image'});
                 }
             });
@@ -73,14 +83,20 @@ function UploadViewModel() {
 
     self.uploadImage = function(image) {
         var onSuccessUpload = function(image) {
-            self.removeImage(image);
+            self.imageUploads.remove(image);
         }
 
         var onFailUpload = function(image) {
             alert("handle fail...");
         }
 
-        image.upload(onSuccessUpload, onFailUpload);
+        var onAlways = function(image) {
+            if (self.imageUploads().length == 1 && self.imageUploads()[0] == image) {
+                self.isUploading(false);
+            }
+        }
+        self.isUploading(true);
+        image.upload(onSuccessUpload, onFailUpload, onAlways);
     }
 
     self.uploadImages = function() {
