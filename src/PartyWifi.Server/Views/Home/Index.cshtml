@@ -4,7 +4,12 @@
 }
 
 @section scripts {
+<environment names="Development">
     <script src="~/js/upload.js"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="~/js/upload.min.js"></script>
+</environment>
 }
 
 <h2>Willkommen</h2>
