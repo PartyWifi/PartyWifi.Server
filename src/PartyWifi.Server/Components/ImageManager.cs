@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using ImageSharp;
 using Microsoft.Extensions.Options;
 using System.Text;
+using ImageSharp.Processing;
 
 namespace PartyWifi.Server.Components
 {
@@ -71,6 +72,9 @@ namespace PartyWifi.Server.Components
                 UploadDate = DateTime.Now
             };
 
+            // Check orientation - iOS devices do not modify the image itself (only exif data is changed)
+            RotateIfNecessary(stream);
+
             // Save original for customer to take home
             var original = await SaveFromStream(stream);
             info.Versions.Add(new ImageVersion(ImageVersions.Original, original));
@@ -78,17 +82,15 @@ namespace PartyWifi.Server.Components
             // Resize for the slide-show if image is too big
             var resized = original;
             if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))
-            {
                 resized = await SaveFromStream(stream);
-            }
+  
             info.Versions.Add(new ImageVersion(ImageVersions.Resized, resized));
 
             // Resize for the thumbnail
             var thumbnail = original;
             if (ResizeIfNecessary(stream, 150, 150))
-            {
                 thumbnail = await SaveFromStream(stream);
-            }
+
             info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, thumbnail));
 
             // Add and publish
@@ -145,6 +147,38 @@ namespace PartyWifi.Server.Components
         }
 
         /// <summary>
+        /// Resizes the image if necessary. 
+        /// iOS devices do not modify the image itself (only exif data is changed)
+        /// </summary>
+        private static void RotateIfNecessary(Stream memoryStream)
+        {
+            using (var image = Image.Load(memoryStream))
+            {
+                var exifProfile = image.MetaData.ExifProfile;
+                var orientation = exifProfile.GetValue(ExifTag.Orientation);
+                switch ((ushort)orientation.Value)
+                {
+                    case 1: // Nothing to do
+                        memoryStream.Position = 0;
+                        return;
+                    case 3: // Rotate 180
+                        image.Rotate(RotateType.Rotate180);
+                        break;
+                    case 6: // Rotate 90
+                        image.Rotate(RotateType.Rotate90);
+                        break;
+                    case 8: // Rotate 270
+                        image.Rotate(RotateType.Rotate270);
+                        break;
+                }
+
+                exifProfile.SetValue(ExifTag.Orientation, (ushort)1);
+
+                SaveAndReuseStream(memoryStream, image);
+            }
+        }
+
+        /// <summary>
         /// Create a resized version of the image if necessary
         /// </summary>
         /// <returns>
@@ -169,11 +203,9 @@ namespace PartyWifi.Server.Components
                 var newWidth = (int)Math.Floor(image.Width / scaling);
                 var newHeight = (int)Math.Floor(image.Height / scaling);
 
-                // Reset stream and reuse it
-                memoryStream.SetLength(0);
-                image.Resize(newWidth, newHeight)
-                     .Save(memoryStream);
-                memoryStream.Position = 0;
+                image.Resize(newWidth, newHeight);
+
+                SaveAndReuseStream(memoryStream, image);
 
                 return true;
             }
@@ -186,6 +218,13 @@ namespace PartyWifi.Server.Components
             var path = Path.Combine(_settings.Directory, ImageDirectory, subdir, fileName);
             
             return new FileStream(path, FileMode.Open);
+        }
+
+        private static void SaveAndReuseStream(Stream memoryStream, Image image)
+        {
+            memoryStream.SetLength(0);
+            image.Save(memoryStream);
+            memoryStream.Position = 0;
         }
 
         public event EventHandler<ImageInfo> Added;
