@@ -156,11 +156,16 @@ namespace PartyWifi.Server.Components
             {
                 var exifProfile = image.MetaData.ExifProfile;
                 var orientation = exifProfile.GetValue(ExifTag.Orientation);
+                // Orientation value is not set by all devices, in that case ignore
+                if(orientation?.Value == null || (ushort)orientation.Value == 1)
+                {
+                    memoryStream.Position = 0;
+                    return;
+                }
+
+                // Apply orientation to image
                 switch ((ushort)orientation.Value)
                 {
-                    case 1: // Nothing to do
-                        memoryStream.Position = 0;
-                        return;
                     case 3: // Rotate 180
                         image.Rotate(RotateType.Rotate180);
                         break;
