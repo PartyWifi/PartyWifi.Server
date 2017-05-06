@@ -18,11 +18,12 @@
         {
             "taskName": "build release",
             "args": [
-                "${workspaceRoot}/src/PartyWifi.Server/PartyWifi.Server.csproj", "-c", "Release"
+                "build", "${workspaceRoot}/src/PartyWifi.Server/PartyWifi.Server.csproj", "-c", "Release"
             ],
             "isBuildCommand": true,
             "showOutput": "always",
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "suppressTaskName": true
         }
     ]
 }
