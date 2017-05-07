@@ -155,6 +155,13 @@ namespace PartyWifi.Server.Components
             using (var image = Image.Load(memoryStream))
             {
                 var exifProfile = image.MetaData.ExifProfile;
+                // Not all images include exif data
+                if (exifProfile == null)
+                {
+                    memoryStream.Position = 0;
+                    return;
+                }
+
                 var orientation = exifProfile.GetValue(ExifTag.Orientation);
                 // Orientation value is not set by all devices, in that case ignore
                 if(orientation?.Value == null || (ushort)orientation.Value == 1)
