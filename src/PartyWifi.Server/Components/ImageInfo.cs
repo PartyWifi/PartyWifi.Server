@@ -38,6 +38,11 @@ namespace PartyWifi.Server.Components
         /// </summary>
         public DateTime UploadDate { get; set; }
 
+        /// <summary>
+        /// Current state of the image
+        /// </summary>
+        public ImageState ImageState { get; set; }
+
         ///<summary>
         /// All versions of this image
         ///</summary>
@@ -48,7 +53,7 @@ namespace PartyWifi.Server.Components
         /// </summary>
         public void SaveTo(string directory)
         {
-            var fileName = Path.Combine(directory, $"{Id}.json"); // Use first block of id as file name
+            var fileName = Path.Combine(directory, $"{Id}.json");
             var json = JsonConvert.SerializeObject(this, new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented
