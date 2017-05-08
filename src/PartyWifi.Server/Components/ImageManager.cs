@@ -196,7 +196,7 @@ namespace PartyWifi.Server.Components
         /// <returns>
         /// True if image was resized, otherwise false
         /// </returns>
-        private bool ResizeIfNecessary(Stream memoryStream, int width, int height)
+        private static bool ResizeIfNecessary(Stream memoryStream, int width, int height)
         {
             using (var image = Image.Load(memoryStream))
             {
@@ -232,7 +232,7 @@ namespace PartyWifi.Server.Components
             return new FileStream(path, FileMode.Open);
         }
 
-        private static void SaveAndReuseStream(Stream memoryStream, Image image)
+        private static void SaveAndReuseStream(Stream memoryStream, Image<Rgba32> image)
         {
             memoryStream.SetLength(0);
             image.Save(memoryStream);
