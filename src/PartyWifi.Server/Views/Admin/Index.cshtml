@@ -1,4 +1,4 @@
-﻿@model dynamic
+﻿@model PartyWifi.Server.Controllers.AdminController.AdminModel
 
 @{
     ViewBag.Title = "Verwalten";
@@ -7,11 +7,29 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<script>
+<form>
+    <label>Rotation Time: </label>
+    <input type="text" value="@Model.RotationTime">
+</form>
 
+@Html.Partial("Pagination", Model)
 
-    function rotationTimeChanged(time) {
-        $.post('admin/rotationTime', { seconds: time });
-    }
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Bild</th>
+        <th>Name</th>
+        <th>Options</th>
+    </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var file in Model.Files)
+            {
+                @Html.Partial("FileEntry", file)
+            }
+        }
+    </tbody>
+</table>
 
-</script>
+@Html.Partial("Pagination", Model)

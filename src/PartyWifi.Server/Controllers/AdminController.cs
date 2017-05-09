@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using PartyWifi.Server.Components;
+using PartyWifi.Server.Models;
 
 namespace PartyWifi.Server.Controllers
 {
@@ -7,21 +9,27 @@ namespace PartyWifi.Server.Controllers
     {
         private readonly ISlideshowHandler _slideshowHandler;
 
-        public AdminController(ISlideshowHandler slideshowHandler)
+        private readonly IImageManager _imageManager;
+
+        public AdminController(ISlideshowHandler slideshowHandler, IImageManager imageManager)
         {
             _slideshowHandler = slideshowHandler;
+            _imageManager = imageManager;
         }
 
         // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult Index([FromQuery]int? page)
         {
-            return View();
+            var fileList = _imageManager.FileList<AdminModel>(page ?? 1, 10);
+            fileList.RotationTime = _slideshowHandler.RotationMs;
+            return View(fileList);
         }
 
-        [HttpGet]
-        public IActionResult RotationTime()
+        [HttpDelete]
+        public IActionResult Delete(string id)
         {
-            return Json(new { time = _slideshowHandler.RotationMs/1000});
+            _imageManager.Delete(id);
+            return Ok();
         }
 
         [HttpPost]
@@ -29,6 +37,16 @@ namespace PartyWifi.Server.Controllers
         {
             _slideshowHandler.RotationMs = seconds*1000;
             return Ok();
+        }
+
+        public class AdminModel : FileList
+        {
+            public int RotationTime { get; set; }
+
+            public override string PageUrlBuilder(int page)
+            {
+                return $"admin?page={page}";
+            }
         }
     }
 }

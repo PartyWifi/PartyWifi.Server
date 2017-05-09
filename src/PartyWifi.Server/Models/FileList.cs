@@ -2,9 +2,10 @@ namespace PartyWifi.Server.Models
 {
     /// <summary>
     /// Model for the file list containing the current page, all pages
-    /// and the images for this page.
+    /// and the images for this page. This base class needs to be derived
+    /// by each controller to set the url builder.
     /// </summary>
-    public class FileList
+    public abstract class FileList
     {
         /// <summary>
         /// Current page
@@ -20,5 +21,10 @@ namespace PartyWifi.Server.Models
         /// Files on this page
         /// </summary>
         public FileListEntry[] Files { get; set; }
+
+        /// <summary>
+        /// Build the url to navigate to a page
+        /// </summary>
+        public abstract string PageUrlBuilder(int page);
     }
 }

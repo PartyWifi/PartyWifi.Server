@@ -20,3 +20,17 @@ $(window).on('hashchange',function() {
         $.magnificPopup.close(); 
     }
 });
+
+function approveImg(id) {
+
+};
+
+function deleteImg(id) {
+  $.ajax({
+    url: '/admin/delete/' + id,
+    type: 'DELETE',
+    success: function(result) {
+        location.reload();
+    }
+  });
+}

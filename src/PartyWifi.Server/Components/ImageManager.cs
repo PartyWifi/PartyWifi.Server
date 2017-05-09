@@ -232,6 +232,27 @@ namespace PartyWifi.Server.Components
             return new FileStream(path, FileMode.Open);
         }
 
+        public void Delete(string id)
+        {
+            lock(_images)
+            {
+                // Delete from list
+                var img = _images.First(i => i.Id == id);
+                _images.Remove(img);
+
+                // Move file
+                var removedDir = Path.Combine(_settings.Directory, "removed");
+                if(!Directory.Exists(removedDir))
+                {
+                    Directory.CreateDirectory(removedDir);
+                }
+
+                var oldPath = Path.Combine(_settings.Directory, id + ".json");
+                var newPath = Path.Combine(removedDir, id + ".json");
+                File.Move(oldPath, newPath);
+            }
+        }
+
         private static void SaveAndReuseStream(Stream memoryStream, Image<Rgba32> image)
         {
             memoryStream.SetLength(0);

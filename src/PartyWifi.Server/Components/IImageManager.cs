@@ -46,6 +46,11 @@ namespace PartyWifi.Server.Components
         Stream Open(string hash);
 
         /// <summary>
+        /// Remove image
+        /// </summary>
+        void Delete(string id);
+
+        /// <summary>
         /// Event raised when an image was Added
         /// </summary>
         event EventHandler<ImageInfo> Added;

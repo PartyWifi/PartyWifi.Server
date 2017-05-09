@@ -1,0 +1,18 @@
+@model PartyWifi.Server.Models.FileListEntry
+
+@{
+  var segments = Model.Id.Split('-');
+}
+
+<tr>
+    <td><img width="155" src="/image/thumbnail/@Model.Id"/></td>
+    <td><span>@segments[0]</span><span class="hidden-sm-down">-@string.Join("-", segments.Skip(1))</span></td>
+    <td>
+      <a class="btn btn-lg" onclick="approveImg('@Model.Id')">
+        <h2><span class="fa fa-thumbs-up"></span></h2>
+      </a>
+      <a class="btn btn-lg" onclick="deleteImg('@Model.Id')">
+        <h2><span class="fa fa-trash-o"></span></h2>
+      </a>
+    </td>
+</tr>

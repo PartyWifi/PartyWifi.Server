@@ -39,10 +39,10 @@
         if (start > 1)
         {
             <li class="page-item">
-                <a class="page-link" href="/files/page/1">1</a>
+                <a class="page-link" href="@Model.PageUrlBuilder(1)">1</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="/files/page/@(start - 1)">..</a>
+                <a class="page-link" href="@Model.PageUrlBuilder(start - 1)">..</a>
             </li>
         }
 
@@ -51,7 +51,7 @@
         {
             var active = i == Model.CurrentPage ? "active" : "";
             <li class="page-item @active" >
-                <a class="page-link" href="/files/page/@i">@i</a>
+                <a class="page-link" href="@Model.PageUrlBuilder(i)">@i</a>
             </li>
         }
 
@@ -59,10 +59,10 @@
         if (end < Model.Pages)
         {
             <li class="page-item">
-                <a class="page-link" href="/files/page/@(end + 1)">..</a>
+                <a class="page-link" href="@Model.PageUrlBuilder(end + 1)">..</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="/files/page/@Model.Pages">@Model.Pages</a>
+                <a class="page-link" href="@Model.PageUrlBuilder(Model.Pages)">@Model.Pages</a>
             </li>
         }
     }

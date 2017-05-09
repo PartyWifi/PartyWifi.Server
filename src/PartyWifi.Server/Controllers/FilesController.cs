@@ -22,29 +22,22 @@ namespace PartyWifi.Server.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return Page(1);
+            var fileList = _manager.FileList<OverviewFileList>(1, _imagesPerPage);
+            return View(fileList);
         }
 
         public IActionResult Page(int id)
         {
-            var currentPage = id;
-            var total = _manager.ImageCount;
-            var start = (currentPage - 1) * _imagesPerPage;
+            var fileList = _manager.FileList<OverviewFileList>(id, _imagesPerPage);
+            return View(nameof(Index), fileList);
+        }
 
-            // Get range of files
-            var files = _manager.GetRange(start, _imagesPerPage).Select(imageInfo => new FileListEntry
+        private class OverviewFileList : FileList
+        {
+            public override string PageUrlBuilder(int page)
             {
-                Id = imageInfo.Id,
-                Size = imageInfo.Size,
-                UploadDate = imageInfo.UploadDate
-            }).ToArray();
-
-            return View(nameof(Index), new FileList 
-            {
-                Files = files,
-                CurrentPage = currentPage,
-                Pages = (int)(Math.Ceiling((double)total / _imagesPerPage))
-            });
+                return $"/files/page/{page}";
+            }
         }
     }
 }
