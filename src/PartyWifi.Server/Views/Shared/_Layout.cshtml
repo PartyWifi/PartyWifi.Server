@@ -35,6 +35,7 @@
                             <i class="fa fa-picture-o" aria-hidden="true"></i> Dateien
                         </a>
                     </li>
+                    <!-- Remove items for noew till we have a user model
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">
                             <i class="fa fa-cogs" aria-hidden="true"></i> Verwalten
@@ -45,6 +46,7 @@
                             <i class="fa fa-slideshare" aria-hidden="true"></i> Slideshow
                         </a>
                     </li>
+                    -->
                 </ul>
             </div>
         </nav>
@@ -53,7 +55,7 @@
             @RenderBody()
             <hr />
             <footer>
-                <p>&copy; @DateTime.Now.Year - PartyWifi</p>
+                <a href="https://www.partywifi.com" target="_blank">&copy; @DateTime.Now.Year - PartyWifi</a>
             </footer>
         </div>
     </div>
