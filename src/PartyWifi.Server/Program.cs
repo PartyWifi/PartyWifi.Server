@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace PartyWifi.Server
 {
@@ -7,11 +8,16 @@ namespace PartyWifi.Server
     {
         public static void Main(string[] args)
         {
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("hosting.json")
+                .Build();
+
             var host = new WebHostBuilder()
+                .UseConfiguration(config)
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseUrls("http://*:80")
                 .UseStartup<Startup>()
                 .Build();
 
