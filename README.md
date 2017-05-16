@@ -1,10 +1,12 @@
 PartyWifi.Server
 =============
 
+<img align="right" src="https://github.com/dbeuchler/PartyWifi.Server/raw/master/src/PartyWifi.Server/wwwroot/img/logo.png">
+
 This is the central server of the **PartyWifi** ecosystem. We do not offer any pre-build versions, as each member of the community should compile and deploy the application the way he likes.
 
 # PartyWifi
-The concept of **PartyWifi** is to create a community franchise of developers and applications around the world. The target market of these applications are parties and events with a local WiFi network and a dedicated server. Guests of the event can use a range of digital services as long as they are connected to the events network. Slideshows, chats or seating arrangments are some examples of things that could be offered within the network.
+The concept of **PartyWifi** is to create a community franchise of developers and applications around the world. The target market of these applications are parties and events with a local WiFi network and a dedicated server. Guests of the event can use a range of digital services as long as they are connected to the events network. Photosharing, Slideshows, chats or seating arrangments are some examples of things that could be offered within the network.
 
 # Usage
 You can use this application for free or even redistribute it commercially without restrictions or license fees. Whether you install it for free at your own wedding or score a huge contract with a local club is not just permitted, but actually encouraged. You can also sell hardware that comes preinstalled with **PartyWifi** or build client-devices intended to be used in a **PartyWifi** network.
