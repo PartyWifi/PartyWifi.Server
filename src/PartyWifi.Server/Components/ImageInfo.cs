@@ -10,6 +10,8 @@ namespace PartyWifi.Server.Components
     /// </summary>
     public class ImageInfo
     {
+        public const string InfoExtension = ".json";
+
         /// <summary>
         /// Prepare <see cref="ImageInfo" /> and initialize versions
         /// </summary>
@@ -53,7 +55,7 @@ namespace PartyWifi.Server.Components
         /// </summary>
         public void SaveTo(string directory)
         {
-            var fileName = Path.Combine(directory, $"{Id}.json");
+            var fileName = Path.Combine(directory, $"{Id}{InfoExtension}");
             var json = JsonConvert.SerializeObject(this, new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented

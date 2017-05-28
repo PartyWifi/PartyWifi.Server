@@ -21,6 +21,16 @@ $(window).on('hashchange',function() {
     }
 });
 
+function exportImgs(path) {
+  $.ajax({
+      url: '/admin/export',
+      type: "POST",
+      dataType: "xml/html/script/json", // expected format for response
+      contentType: "application/json", // send as JSON
+      data: JSON.stringify({ path: path })
+  });
+}
+
 function approveImg(id) {
 
 };

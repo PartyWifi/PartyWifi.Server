@@ -12,6 +12,19 @@
     <input type="text" value="@Model.RotationTime">
 </form>
 
+<div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Export
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+@{
+    foreach(var directory in Model.ExportDirectories)
+    {
+        <li><a onclick="exportImgs('@directory')">@directory</a></li>
+    }
+}
+  </ul>
+</div>
+
 @Html.Partial("Pagination", Model)
 
 <table class="table table-striped">

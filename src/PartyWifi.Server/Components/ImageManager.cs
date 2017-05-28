@@ -243,12 +243,10 @@ namespace PartyWifi.Server.Components
                 // Move file
                 var removedDir = Path.Combine(_settings.Directory, "removed");
                 if(!Directory.Exists(removedDir))
-                {
                     Directory.CreateDirectory(removedDir);
-                }
 
-                var oldPath = Path.Combine(_settings.Directory, id + ".json");
-                var newPath = Path.Combine(removedDir, id + ".json");
+                var oldPath = Path.Combine(_settings.Directory, id + ImageInfo.InfoExtension);
+                var newPath = Path.Combine(removedDir, id + ImageInfo.InfoExtension);
                 File.Move(oldPath, newPath);
             }
         }
