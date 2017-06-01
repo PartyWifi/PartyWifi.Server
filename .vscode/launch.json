@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/src/PartyWifi.Server/bin/Debug/netcoreapp1.1/PartyWifi.Server.dll",
+            "program": "${workspaceRoot}/src/PartyWifi.Server/bin/Debug/netcoreapp2.0/PartyWifi.Server.dll",
             "args": [],
             "cwd": "${workspaceRoot}/src/PartyWifi.Server",
             "stopAtEntry": false,

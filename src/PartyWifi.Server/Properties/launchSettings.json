@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49282/",
+      "applicationUrl": "http://localhost:55555/",
       "sslPort": 0
     }
   },
@@ -18,10 +18,10 @@
     "PartyWifi.Server": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:5000/"
     }
   }
 }

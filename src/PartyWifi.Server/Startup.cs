@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PartyWifi.Server.Components;
 using PartyWifi.Server.DataModel;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace PartyWifi.Server
 {
@@ -25,6 +24,7 @@ namespace PartyWifi.Server
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
+
             Configuration = builder.Build();
         }
 
@@ -35,16 +35,11 @@ namespace PartyWifi.Server
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
-
+            
             // Directories for uploaded and resized images
             services.Configure<Settings>(Configuration.GetSection("Settings"));
 
             services.AddMvc();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "PartyWifi API v1", Version = "v1" });
-            });
 
             // Add image manager
             services.AddSingleton<IImageManager, ImageManager>();
@@ -54,9 +49,6 @@ namespace PartyWifi.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IImageManager imageManager, ISlideshowHandler slideshowHandler)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -81,15 +73,8 @@ namespace PartyWifi.Server
                         template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PartyWifi API v1");
-            });
-
             imageManager.Initialize();
             slideshowHandler.Initialize();
-
         }
     }
 }

@@ -254,7 +254,7 @@ namespace PartyWifi.Server.Components
         private static void SaveAndReuseStream(Stream memoryStream, Image<Rgba32> image)
         {
             memoryStream.SetLength(0);
-            image.Save(memoryStream);
+            image.Save(memoryStream, ImageFormats.Jpeg);
             memoryStream.Position = 0;
         }
 

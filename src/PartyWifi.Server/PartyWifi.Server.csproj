@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>PartyWifi.Server</AssemblyName>
     <PackageId>PartyWifi.Server</PackageId>
-    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.04-x64;linux-arm</RuntimeIdentifiers>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,46 +14,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
-    <PackageReference Include="System.IO.FileSystem.DriveInfo" Version="4.3.0"/>
-    <PackageReference Include="ImageSharp" Version="1.0.0-alpha9-00021" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0-preview2-final" />
+    <PackageReference Include="ImageSharp" Version="1.0.0-alpha9-00169" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0-preview2-final" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm install" />
     <Exec Command="gulp default" />
-    <Exec Command="dotnet bundle" />
   </Target>
 </Project>
