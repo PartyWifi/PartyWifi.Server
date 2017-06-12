@@ -1,9 +1,9 @@
 PartyWifi.Server
 =============
 
-[![Join the chat at https://gitter.im/PartyWifi/PartyWifi.Server](https://badges.gitter.im/PartyWifi/PartyWifi.Server.svg)](https://gitter.im/PartyWifi/PartyWifi.Server?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 <img align="right" src="https://github.com/dbeuchler/PartyWifi.Server/raw/master/src/PartyWifi.Server/wwwroot/img/logo.png">
+
+[![Join the chat at https://gitter.im/PartyWifi/PartyWifi.Server](https://badges.gitter.im/PartyWifi/PartyWifi.Server.svg)](https://gitter.im/PartyWifi/PartyWifi.Server?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the central server of the **PartyWifi** ecosystem. We do not offer any pre-build versions, as each member of the community should compile and deploy the application the way he likes.
 
