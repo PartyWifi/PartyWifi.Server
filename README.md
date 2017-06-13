@@ -7,6 +7,16 @@ PartyWifi.Server
 
 This is the central server of the **PartyWifi** ecosystem. We do not offer any pre-build versions, as each member of the community should compile and deploy the application the way he likes.
 
+[![Join the chat at https://gitter.im/PartyWifi/PartyWifi.Server](https://badges.gitter.im/PartyWifi/PartyWifi.Server.svg)](https://gitter.im/PartyWifi/PartyWifi.Server?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![Issues](https://img.shields.io/github/issues/PartyWifi/PartyWifi.Server.svg)](https://github.com/PartyWifi/PartyWifi.Server/issues)
+
+# Builds
+
+|             |Build Status|
+|-------------|:----------:|
+|**Linux**|[![Build Status](https://travis-ci.org/PartyWifi/PartyWifi.Server.svg?branch=dev)](https://travis-ci.org/PartyWifi/PartyWifi.Server)|
+
 # PartyWifi
 The concept of **PartyWifi** is to create a community franchise of developers and applications around the world. The target market of these applications are parties and events with a local WiFi network and a dedicated server. Guests of the event can use a range of digital services as long as they are connected to the events network. Photosharing, Slideshows, chats or seating arrangments are some examples of things that could be offered within the network.
 

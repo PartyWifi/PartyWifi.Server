@@ -1,0 +1,19 @@
+language: csharp
+solution: PartyWifi.sln
+mono: none
+dotnet: 2.0.0-preview1-005977
+sudo: required
+
+os:
+  - linux
+
+dist: trusty # Ubuntu 14.04 when on linux
+
+branches:
+  only:
+    - master
+    - dev
+ 
+script:
+  - dotnet restore 
+  - dotnet build
