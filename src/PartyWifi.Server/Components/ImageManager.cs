@@ -154,38 +154,15 @@ namespace PartyWifi.Server.Components
         {
             using (var image = Image.Load(memoryStream))
             {
-                var exifProfile = image.MetaData.ExifProfile;
                 // Not all images include exif data
+                var exifProfile = image.MetaData.ExifProfile;
                 if (exifProfile == null)
                 {
                     memoryStream.Position = 0;
                     return;
                 }
 
-                var orientation = exifProfile.GetValue(ExifTag.Orientation);
-                // Orientation value is not set by all devices, in that case ignore
-                if(orientation?.Value == null || (ushort)orientation.Value == 1)
-                {
-                    memoryStream.Position = 0;
-                    return;
-                }
-
-                // Apply orientation to image
-                switch ((ushort)orientation.Value)
-                {
-                    case 3: // Rotate 180
-                        image.Rotate(RotateType.Rotate180);
-                        break;
-                    case 6: // Rotate 90
-                        image.Rotate(RotateType.Rotate90);
-                        break;
-                    case 8: // Rotate 270
-                        image.Rotate(RotateType.Rotate270);
-                        break;
-                }
-
-                exifProfile.SetValue(ExifTag.Orientation, (ushort)1);
-
+                image.AutoOrient();
                 SaveAndReuseStream(memoryStream, image);
             }
         }
