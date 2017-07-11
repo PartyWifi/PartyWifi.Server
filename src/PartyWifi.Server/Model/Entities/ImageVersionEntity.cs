@@ -1,4 +1,4 @@
-namespace PartyWifi.Server.DataModel
+namespace PartyWifi.Server.Model
 {
     public class ImageVersionEntity : IEntity
     {
@@ -6,6 +6,6 @@ namespace PartyWifi.Server.DataModel
 
         public int Version { get; set; }
 
-        public string ImageHash { get; set; }
+        public string Hash { get; set; }
     }
 }

@@ -1,8 +1,8 @@
-using System.Linq;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace PartyWifi.Server.DataModel
+namespace PartyWifi.Server.Model
 {
     public interface IRepository : IDisposable
     {
@@ -15,12 +15,10 @@ namespace PartyWifi.Server.DataModel
 
         T GetByKey(long id);
 
-        void Create(T entity);
-
         ICollection<T> GetAll();
 
-        void Remove(T entity);
+        T Create();
 
-        void RemoveRange(IEnumerable<T> entities);
+        void Remove(T entity);
     }
 }

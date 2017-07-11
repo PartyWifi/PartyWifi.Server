@@ -48,7 +48,7 @@ namespace PartyWifi.Server.Components
         /// <summary>
         /// Remove image
         /// </summary>
-        void Delete(string id);
+        Task Delete(string id);
 
         /// <summary>
         /// Event raised when an image was Added

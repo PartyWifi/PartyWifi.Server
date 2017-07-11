@@ -3,7 +3,7 @@ using System;
 namespace PartyWifi.Server.Components
 {
     /// <summary>
-    /// State flags of images
+    /// ImageState flags of images
     /// </summary>
     [Flags]
     public enum ImageState
@@ -17,5 +17,10 @@ namespace PartyWifi.Server.Components
         /// Image was selected as hidden by organizor
         /// </summary>
         Hidden = 0x2,
+
+        /// <summary>
+        /// Image was deleted by admin
+        /// </summary>
+        Deleted = 0x4,
     }
 }

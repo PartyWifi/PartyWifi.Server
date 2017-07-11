@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using ImageSharp;
 using Microsoft.AspNetCore.Mvc;
 using PartyWifi.Server.Components;
@@ -79,7 +80,7 @@ namespace PartyWifi.Server.Controllers
                 var original = image.Versions.First(a => a.Version == ImageVersions.Original);
                 var fileName = Path.Combine(exportRequest.Path, image.UploadDate.ToString("yyyyMMdd-hhmmss_fff") + ".jpg");
                 
-                using (var img = _imageManager.Open(original.ImageHash))
+                using (var img = _imageManager.Open(original.Hash))
                 using (var fs = new FileStream(fileName, FileMode.CreateNew))
                 {
                     Image.Load(img).SaveAsJpeg(fs);
@@ -97,9 +98,9 @@ namespace PartyWifi.Server.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            _imageManager.Delete(id);
+            await _imageManager.Delete(id);
             return Ok();
         }
 

@@ -23,7 +23,7 @@ namespace PartyWifi.Server
             var image = _manager.Get(id);
             var imageVersion = image.Versions.First(v => v.Version == version);
 
-            var stream = _manager.Open(imageVersion.ImageHash);
+            var stream = _manager.Open(imageVersion.Hash);
             return File(stream, "image/jpeg");
         }
 

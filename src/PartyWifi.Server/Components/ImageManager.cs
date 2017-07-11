@@ -7,12 +7,14 @@ using System.Security.Cryptography;
 using ImageSharp;
 using Microsoft.Extensions.Options;
 using System.Text;
-using ImageSharp.Processing;
+using System.Threading;
+using PartyWifi.Server.Model;
 
 namespace PartyWifi.Server.Components
 {
     public class ImageManager : IImageManager
     {
+        private readonly IUnitOfWorkFactory _modelFactory;
         private const string ImageDirectory = "img";
 
         private readonly Settings _settings;
@@ -20,9 +22,11 @@ namespace PartyWifi.Server.Components
         private string _imgDir;
 
         private List<ImageInfo> _images;
+        private readonly ReaderWriterLockSlim _imageLock = new ReaderWriterLockSlim();
 
-        public ImageManager(IOptions<Settings> settings)
+        public ImageManager(IOptions<Settings> settings, IUnitOfWorkFactory modelFactory)
         {
+            _modelFactory = modelFactory;
             _settings = settings.Value;
         }
 
@@ -35,30 +39,40 @@ namespace PartyWifi.Server.Components
                 Directory.CreateDirectory(_imgDir);
             }
 
-            // Restore image objects from meta files
-            _images = Directory.EnumerateFiles(_settings.Directory)
-                               .Select(ImageInfo.FromFile)
-                               .OrderBy(img => img.UploadDate).ToList();
+            // Restore image objects from database
+            using (var uow = _modelFactory.Create())
+            {
+                _images = new List<ImageInfo>(ImageStorage.GetAll(uow).OrderBy(info => info.UploadDate));
+            }
         }
 
         public int ImageCount => _images.Count;
 
         public ImageInfo Get(int index)
         {
-            lock(_images) 
-                return _images[index];
+            _imageLock.EnterReadLock();
+            var result = _images[index];
+            _imageLock.ExitReadLock();
+
+            return result;
         }
 
         public ImageInfo Get(string imageId)
         {
-            lock(_images) 
-                return _images.First(i => i.Id.Equals(imageId));
+            _imageLock.EnterReadLock();
+            var result =  _images.First(i => i.Id.Equals(imageId));
+            _imageLock.ExitReadLock();
+
+            return result;
         }
 
         public ImageInfo[] GetRange(int start, int count)
         {
-            lock(_images) 
-                return _images.Skip(start).Take(count).ToArray();
+            _imageLock.EnterReadLock();
+            var result = _images.Skip(start).Take(count).ToArray();
+            _imageLock.ExitReadLock();
+
+            return result;
         }
 
         public async Task Add(Stream stream)
@@ -93,14 +107,19 @@ namespace PartyWifi.Server.Components
 
             info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, thumbnail));
 
+            // Save info
+            using (var uow = _modelFactory.Create())
+            {
+                ImageStorage.Add(uow, info);
+                await uow.SaveAsync();
+            }
+
             // Add and publish
-            lock (_images)
-                _images.Add(info);
+            _imageLock.EnterWriteLock();
+            _images.Add(info);
+            _imageLock.ExitWriteLock();
 
             RaiseAdded(info);
-
-            // Save info as well
-            info.SaveTo(_settings.Directory);
         }
 
         /// <summary>
@@ -209,22 +228,23 @@ namespace PartyWifi.Server.Components
             return new FileStream(path, FileMode.Open);
         }
 
-        public void Delete(string id)
+        public async Task Delete(string id)
         {
-            lock(_images)
+            _imageLock.EnterWriteLock();
+
+            // Delete from list
+            var info = _images.First(i => i.Id == id);
+            _images.Remove(info);
+
+            _imageLock.ExitWriteLock();
+
+            info.ImageState |= ImageState.Deleted;
+
+            // Move file
+            using (var uow = _modelFactory.Create())
             {
-                // Delete from list
-                var img = _images.First(i => i.Id == id);
-                _images.Remove(img);
-
-                // Move file
-                var removedDir = Path.Combine(_settings.Directory, "removed");
-                if(!Directory.Exists(removedDir))
-                    Directory.CreateDirectory(removedDir);
-
-                var oldPath = Path.Combine(_settings.Directory, id + ImageInfo.InfoExtension);
-                var newPath = Path.Combine(removedDir, id + ImageInfo.InfoExtension);
-                File.Move(oldPath, newPath);
+                await ImageStorage.Update(uow, info);
+                await uow.SaveAsync();
             }
         }
 

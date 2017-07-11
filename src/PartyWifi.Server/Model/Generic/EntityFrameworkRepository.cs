@@ -1,11 +1,12 @@
-using System.Linq;
 using System.Collections.Generic;
-using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Enumerable = System.Linq.Enumerable;
 
-namespace PartyWifi.Server.DataModel
+namespace PartyWifi.Server.Model
 {
-    public abstract class EntityFrameworkRepository<T> : IRepository<T> where T : class, IEntity
+    public abstract class EntityFrameworkRepository<T> : IRepository<T>, IContextBasedRepository
+        where T : class, IEntity, new()
     {
         public IUnitOfWork UnitOfWork { get; private set; }
 
@@ -15,24 +16,22 @@ namespace PartyWifi.Server.DataModel
 
         public virtual IQueryable<T> Linq => DbSet;
 
-        public EntityFrameworkRepository(IUnitOfWork uow, DbContext context)
+        void IContextBasedRepository.SetContext(IUnitOfWork uow, DbContext context)
         {
-            if (context == null) 
-                throw new ArgumentNullException(nameof(context));
-
-            if (uow == null)
-                throw new ArgumentNullException(nameof(uow));
+            Guard.ArgumentNotNull(uow, nameof(uow));
+            Guard.ArgumentNotNull(context, nameof(context));
 
             Context = context;
             UnitOfWork = uow;
+            DbSet = Context.Set<T>();
         }
 
-        public void Create(T entity)
+        public T Create()
         {
-            if (entity == null) 
-                throw new ArgumentNullException(nameof(entity));
-                
-            Context.Set<T>().Add(entity);
+            var entity = new T();
+            DbSet.Add(entity);
+
+            return entity;
         }
 
         public ICollection<T> GetAll()
@@ -53,14 +52,6 @@ namespace PartyWifi.Server.DataModel
             DbSet.Remove(entity);
         }
 
-        public void RemoveRange(IEnumerable<T> entities)
-        {
-            if (entities == null)
-                return;
-
-            DbSet.RemoveRange(entities.ToArray());
-        }
-        
         public virtual void Dispose()
         {
 

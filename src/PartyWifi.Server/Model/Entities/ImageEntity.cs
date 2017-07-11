@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
 
-namespace PartyWifi.Server.DataModel
+namespace PartyWifi.Server.Model
 {
-    public class ImageUploadEntity : IEntity
+    public class ImageEntity : IEntity
     {
+        public ImageEntity()
+        {
+            Versions = new List<ImageVersionEntity>();
+        }
+
         public long Id { get; set; }
 
         public string Identifier { get; set; }
 
         public long Size { get; set; }
 
-        public bool IsApproved { get; set; }
+        public int ImageState { get; set; }
 
         public DateTime UploadDate { get; set; }
 

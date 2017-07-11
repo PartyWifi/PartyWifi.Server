@@ -1,4 +1,4 @@
-namespace PartyWifi.Server.DataModel
+namespace PartyWifi.Server.Model
 {
     public interface IEntity 
     {

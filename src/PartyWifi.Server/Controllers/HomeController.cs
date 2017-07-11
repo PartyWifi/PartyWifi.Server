@@ -1,19 +1,9 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using PartyWifi.Server.Components;
-using PartyWifi.Server.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace PartyWifi.Server.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IImageManager _imageManager;
-
-        public HomeController(IImageManager imageManager)
-        {
-            _imageManager = imageManager;
-        }
-
         public IActionResult Index()
         {
             return View();

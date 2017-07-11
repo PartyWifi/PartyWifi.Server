@@ -33,7 +33,12 @@ namespace PartyWifi.Server.Components
         /// <summary>
         /// Flag if image was approved for slideshow
         /// </summary>
-        public bool IsApproved { get; set; }
+        public bool IsApproved => ImageState.HasFlag(ImageState.Approved);
+
+        /// <summary>
+        /// Flag if the image was deleted
+        /// </summary>
+        public bool IsDeleted => ImageState.HasFlag(ImageState.Deleted);
 
         /// <summary>
         /// Time-stamp of the image upload
@@ -49,27 +54,5 @@ namespace PartyWifi.Server.Components
         /// All versions of this image
         ///</summary>
         public List<ImageVersion> Versions { get; set; }
-
-        /// <summary>
-        /// Save this image to the file system at given directory
-        /// </summary>
-        public void SaveTo(string directory)
-        {
-            var fileName = Path.Combine(directory, $"{Id}{InfoExtension}");
-            var json = JsonConvert.SerializeObject(this, new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            });
-            File.WriteAllText(fileName, json);
-        }
-
-        ///<summary>
-        /// Load <see cref="ImageInfo" /> from given file
-        ///</summary>
-        public static ImageInfo FromFile(string filePath)
-        {
-            var json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<ImageInfo>(json);
-        }
     }
 }
