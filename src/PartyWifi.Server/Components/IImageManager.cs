@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -17,28 +16,30 @@ namespace PartyWifi.Server.Components
         void Initialize();
 
         /// <summary>
-        /// Total number of images hosted
-        int ImageCount { get; }
-
-        /// <summary>
-        /// Get image at this index
+        /// Get image by current index
         /// </summary>
         ImageInfo Get(int index);
 
         /// <summary>
-        /// Get image by imageID
+        /// Returns the number of managed images 
         /// </summary>
-        ImageInfo Get(string imageId);
+        /// <returns></returns>
+        int ImageCount();
+
+        /// <summary>
+        /// Get image by identifier
+        /// </summary>
+        ImageInfo GetByIdentifier(string identifier);
 
         /// <summary>
         /// Get a number of images for paging
         /// </summary>
-        ImageInfo[] GetRange(int start, int count);
+        ImageInfo[] GetRange(int start, int limit);
 
         /// <summary>
         /// Upload a new image
         /// </summary>
-        Task Add(Stream stream);
+        Task<ImageInfo> Add(Stream stream);
 
         /// <summary>
         /// Open image stream with this hash
@@ -48,11 +49,16 @@ namespace PartyWifi.Server.Components
         /// <summary>
         /// Remove image
         /// </summary>
-        Task Delete(string id);
+        Task Delete(string identifier);
 
         /// <summary>
         /// Event raised when an image was Added
         /// </summary>
         event EventHandler<ImageInfo> Added;
+
+        /// <summary>
+        /// Event raised when an image was Updated
+        /// </summary>
+        event EventHandler<ImageInfo> Updated;
     }
 }

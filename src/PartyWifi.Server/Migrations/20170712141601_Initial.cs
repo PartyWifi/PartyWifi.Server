@@ -16,12 +16,11 @@ namespace PartyWifi.Server.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Identifier = table.Column<string>(type: "TEXT", nullable: true),
                     ImageState = table.Column<int>(type: "INTEGER", nullable: false),
-                    Size = table.Column<long>(type: "INTEGER", nullable: false),
                     UploadDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImageUploads", x => x.Id);
+                    table.PrimaryKey("PK_Images", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,13 +31,14 @@ namespace PartyWifi.Server.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Hash = table.Column<string>(type: "TEXT", nullable: true),
                     ImageEntityId = table.Column<long>(type: "INTEGER", nullable: true),
+                    Size = table.Column<long>(type: "INTEGER", nullable: false),
                     Version = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ImageVersionEntity", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ImageVersionEntity_ImageUploads_ImageEntityId",
+                        name: "FK_ImageVersionEntity_Images_ImageEntityId",
                         column: x => x.ImageEntityId,
                         principalTable: "Images",
                         principalColumn: "Id",

@@ -29,10 +29,5 @@ namespace PartyWifi.Server
         /// Number of images per page in the file list
         /// </summary>
         public int ImagesPerPage {get; set;}
-
-        /// <summary>
-        /// Automatically approve images
-        /// </summary>
-        public bool AutoApprove { get; set; }
     }
 }

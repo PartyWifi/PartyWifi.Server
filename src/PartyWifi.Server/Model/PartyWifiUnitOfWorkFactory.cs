@@ -22,7 +22,6 @@ namespace PartyWifi.Server.Model
         public IUnitOfWork Create()
         {
             var context = new PartyWifiContext(_connectionString);
-
             context.Database.EnsureCreated();
             //context.Database.Migrate();
 

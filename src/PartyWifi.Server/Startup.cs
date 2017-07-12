@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PartyWifi.Server.Components;
 using PartyWifi.Server.Model;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PartyWifi.Server
 {
@@ -36,11 +38,23 @@ namespace PartyWifi.Server
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
-            
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
+            });
+
             // Directories for uploaded and resized images
             services.Configure<Settings>(Configuration.GetSection("Settings"));
 
             services.AddMvc();
+
+            // add swagger to the services
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "PartyWifi API", Version = "v1" });
+            });
 
             // Add image manager
             services.AddSingleton<IImageManager, ImageManager>();
@@ -63,13 +77,16 @@ namespace PartyWifi.Server
 
             app.UseStaticFiles();
 
+            // Use swagger and ui middleware
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PartyWifi v1");
+            });
+
             app.UseMvc(routes =>
             {
                 routes
-                    .MapRoute( // Special route to load different versions of images
-                        name: "image",
-                        template: "image/{version}/{id}",
-                        defaults: new { controller = "Image", action = "Load" })
                     .MapRoute( // Default route mapped to controller and action
                         name: "default",
                         template: "{controller=Home}/{action=Index}/{id?}");

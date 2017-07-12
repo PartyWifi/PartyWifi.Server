@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Enumerable = System.Linq.Enumerable;
 
 namespace PartyWifi.Server.Model
 {
@@ -16,14 +15,14 @@ namespace PartyWifi.Server.Model
 
         public virtual IQueryable<T> Linq => DbSet;
 
-        void IContextBasedRepository.SetContext(IUnitOfWork uow, DbContext context)
+        public Task<T[]> GetAll()
         {
-            Guard.ArgumentNotNull(uow, nameof(uow));
-            Guard.ArgumentNotNull(context, nameof(context));
+            return DbSet.ToArrayAsync();
+        }
 
-            Context = context;
-            UnitOfWork = uow;
-            DbSet = Context.Set<T>();
+        public Task<T> GetByKey(long id)
+        {
+            return DbSet.FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public T Create()
@@ -32,16 +31,6 @@ namespace PartyWifi.Server.Model
             DbSet.Add(entity);
 
             return entity;
-        }
-
-        public ICollection<T> GetAll()
-        {
-            return DbSet.ToList();
-        }
-
-        public T GetByKey(long id)
-        {
-            return DbSet.FirstOrDefault(e => e.Id == id);
         }
 
         public void Remove(T entity)
@@ -55,6 +44,16 @@ namespace PartyWifi.Server.Model
         public virtual void Dispose()
         {
 
+        }
+
+        void IContextBasedRepository.SetContext(IUnitOfWork uow, DbContext context)
+        {
+            Guard.ArgumentNotNull(uow, nameof(uow));
+            Guard.ArgumentNotNull(context, nameof(context));
+
+            Context = context;
+            UnitOfWork = uow;
+            DbSet = Context.Set<T>();
         }
     }
 }

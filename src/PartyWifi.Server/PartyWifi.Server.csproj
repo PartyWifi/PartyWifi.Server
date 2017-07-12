@@ -19,10 +19,10 @@
     <PackageReference Include="ImageSharp" Version="1.0.0-alpha9-00169" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.0-preview2-final" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0-preview2-final" PrivateAssets="All" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
   </ItemGroup>
 

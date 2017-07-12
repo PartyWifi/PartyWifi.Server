@@ -7,5 +7,7 @@ namespace PartyWifi.Server.Model
         public int Version { get; set; }
 
         public string Hash { get; set; }
+
+        public long Size { get; set; }
     }
 }

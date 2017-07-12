@@ -34,14 +34,9 @@ namespace PartyWifi.Server.Model
             return repo;
         }
 
-        public Task SaveAsync()
+        public Task Save()
         {
             return _context.SaveChangesAsync();
-        }
-
-        public void Save()
-        {
-            _context.SaveChanges();
         }
 
         protected void CloseContext()

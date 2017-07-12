@@ -7,8 +7,6 @@ namespace PartyWifi.Server.Model
     {
         T GetRepository<T>() where T : class, IRepository;
 
-        Task SaveAsync();
-
-        void Save();
+        Task Save();
     }
 }

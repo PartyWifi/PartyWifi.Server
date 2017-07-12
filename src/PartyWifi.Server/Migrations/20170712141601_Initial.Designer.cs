@@ -11,7 +11,7 @@ using System;
 namespace PartyWifi.Server.Migrations
 {
     [DbContext(typeof(PartyWifiContext))]
-    [Migration("20170711182747_Initial")]
+    [Migration("20170712141601_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,13 +29,11 @@ namespace PartyWifi.Server.Migrations
 
                     b.Property<int>("ImageState");
 
-                    b.Property<long>("Size");
-
                     b.Property<DateTime>("UploadDate");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ImageUploads");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("PartyWifi.Server.Model.ImageVersionEntity", b =>
@@ -46,6 +44,8 @@ namespace PartyWifi.Server.Migrations
                     b.Property<string>("Hash");
 
                     b.Property<long?>("ImageEntityId");
+
+                    b.Property<long>("Size");
 
                     b.Property<int>("Version");
 

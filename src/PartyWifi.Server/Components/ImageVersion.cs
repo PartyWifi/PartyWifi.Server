@@ -29,9 +29,10 @@ namespace PartyWifi.Server.Components
         ///<summary>
         /// Create new image version
         ///</summary>
-        public ImageVersion(ImageVersions version, string hash)
+        public ImageVersion(ImageVersions version, long size, string hash)
         {
             Version = version;
+            Size = size;
             Hash = hash;
         }
 
@@ -44,5 +45,10 @@ namespace PartyWifi.Server.Components
         /// Hashcode of this version
         ///</summary>
         public string Hash { get; }
+
+        /// <summary>
+        /// Size of the version
+        /// </summary>
+        public long Size { get; }
     }
 }

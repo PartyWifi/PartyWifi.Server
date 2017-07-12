@@ -14,12 +14,11 @@ namespace PartyWifi.Server.Components
 {
     public class ImageManager : IImageManager
     {
-        private readonly IUnitOfWorkFactory _modelFactory;
         private const string ImageDirectory = "img";
 
+        private readonly string _imgDir;
+        private readonly IUnitOfWorkFactory _modelFactory;
         private readonly Settings _settings;
-
-        private string _imgDir;
 
         private List<ImageInfo> _images;
         private readonly ReaderWriterLockSlim _imageLock = new ReaderWriterLockSlim();
@@ -28,61 +27,69 @@ namespace PartyWifi.Server.Components
         {
             _modelFactory = modelFactory;
             _settings = settings.Value;
+            _imgDir = Path.Combine(_settings.Directory, ImageDirectory);
         }
 
         public void Initialize()
         {
             // Prepare 'img' directory if it does not exist
-            _imgDir = Path.Combine(_settings.Directory, ImageDirectory);
             if (!Directory.Exists(_imgDir))
-            {
                 Directory.CreateDirectory(_imgDir);
-            }
 
             // Restore image objects from database
             using (var uow = _modelFactory.Create())
-            {
-                _images = new List<ImageInfo>(ImageStorage.GetAll(uow).OrderBy(info => info.UploadDate));
-            }
+                _images = new List<ImageInfo>(ImageStorage.GetAll(uow));
         }
-
-        public int ImageCount => _images.Count;
 
         public ImageInfo Get(int index)
         {
             _imageLock.EnterReadLock();
-            var result = _images[index];
+            
+            var result = _images.ElementAtOrDefault(index);
+
             _imageLock.ExitReadLock();
 
             return result;
         }
 
-        public ImageInfo Get(string imageId)
+        public int ImageCount()
         {
             _imageLock.EnterReadLock();
-            var result =  _images.First(i => i.Id.Equals(imageId));
+
+            var result = _images.Count();
+
             _imageLock.ExitReadLock();
 
             return result;
         }
 
-        public ImageInfo[] GetRange(int start, int count)
+        public ImageInfo GetByIdentifier(string identifier)
         {
             _imageLock.EnterReadLock();
-            var result = _images.Skip(start).Take(count).ToArray();
+
+            var result =  _images.SingleOrDefault(i => i.Identifier.Equals(identifier));
+
             _imageLock.ExitReadLock();
 
             return result;
         }
 
-        public async Task Add(Stream stream)
+        public ImageInfo[] GetRange(int start, int limit)
+        {
+            _imageLock.EnterReadLock();
+
+            var result = _images.Skip(start).Take(limit).ToArray();
+
+            _imageLock.ExitReadLock();
+
+            return result;
+        }
+
+        public async Task<ImageInfo> Add(Stream stream)
         {
             // Prepare model
-            var id = Guid.NewGuid().ToString();
-            var info = new ImageInfo
+            var info = new ImageInfo(Guid.NewGuid().ToString())
             {
-                Id = id,
-                Size = stream.Length,
                 UploadDate = DateTime.Now
             };
 
@@ -90,28 +97,28 @@ namespace PartyWifi.Server.Components
             RotateIfNecessary(stream);
 
             // Save original for customer to take home
-            var original = await SaveFromStream(stream);
-            info.Versions.Add(new ImageVersion(ImageVersions.Original, original));
+            var originalHash = await SaveFromStream(stream);
+            info.Versions.Add(new ImageVersion(ImageVersions.Original, stream.Length, originalHash));
 
             // Resize for the slide-show if image is too big
-            var resized = original;
+            var resizedHash = originalHash;
             if (ResizeIfNecessary(stream, _settings.MaxWidth, _settings.MaxHeight))
-                resized = await SaveFromStream(stream);
+                resizedHash = await SaveFromStream(stream);
   
-            info.Versions.Add(new ImageVersion(ImageVersions.Resized, resized));
+            info.Versions.Add(new ImageVersion(ImageVersions.Resized, stream.Length, resizedHash));
 
             // Resize for the thumbnail
-            var thumbnail = original;
+            var thumbnailHash = originalHash;
             if (ResizeIfNecessary(stream, 150, 150))
-                thumbnail = await SaveFromStream(stream);
+                thumbnailHash = await SaveFromStream(stream);
 
-            info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, thumbnail));
+            info.Versions.Add(new ImageVersion(ImageVersions.Thumbnail, stream.Length, thumbnailHash));
 
             // Save info
             using (var uow = _modelFactory.Create())
             {
                 ImageStorage.Add(uow, info);
-                await uow.SaveAsync();
+                await uow.Save();
             }
 
             // Add and publish
@@ -119,7 +126,9 @@ namespace PartyWifi.Server.Components
             _images.Add(info);
             _imageLock.ExitWriteLock();
 
-            RaiseAdded(info);
+            Added?.Invoke(this, info);
+
+            return info;
         }
 
         /// <summary>
@@ -228,24 +237,24 @@ namespace PartyWifi.Server.Components
             return new FileStream(path, FileMode.Open);
         }
 
-        public async Task Delete(string id)
+        public async Task Delete(string identifier)
         {
-            _imageLock.EnterWriteLock();
+            _imageLock.EnterReadLock();
 
             // Delete from list
-            var info = _images.First(i => i.Id == id);
-            _images.Remove(info);
-
-            _imageLock.ExitWriteLock();
-
+            var info = _images.First(i => i.Identifier == identifier);
             info.ImageState |= ImageState.Deleted;
 
-            // Move file
+            // Update database
             using (var uow = _modelFactory.Create())
             {
                 await ImageStorage.Update(uow, info);
-                await uow.SaveAsync();
+                await uow.Save();
             }
+
+            _imageLock.ExitReadLock();
+
+            Updated?.Invoke(this, info);
         }
 
         private static void SaveAndReuseStream(Stream memoryStream, Image<Rgba32> image)
@@ -257,9 +266,6 @@ namespace PartyWifi.Server.Components
 
         public event EventHandler<ImageInfo> Added;
 
-        private void RaiseAdded(ImageInfo info)
-        {
-            Added?.Invoke(this, info);
-        }
+        public event EventHandler<ImageInfo> Updated;
     }
 }

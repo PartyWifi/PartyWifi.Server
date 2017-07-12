@@ -22,7 +22,7 @@ namespace PartyWifi.Server.Components
         
         public void Initialize()
         {
-            _latestImageIndex = _imageManager.ImageCount - 1;
+            //_latestImageIndex = _imageManager.ImageCount - 1;
             RotationMs = _settings.ImageRotationSec * 1000;
         }
 
@@ -30,11 +30,11 @@ namespace PartyWifi.Server.Components
         {
             // First check if any new fotos were added
             var nextIndex = _latestImageIndex + 1;
-            if (nextIndex < _imageManager.ImageCount)
-            {
-                _latestImageIndex = nextIndex;
-                return _imageManager.Get(nextIndex);
-            }
+            //if (nextIndex < _imageManager.ImageCount)
+            //{
+            //    _latestImageIndex = nextIndex;
+            //    return _imageManager.Get(nextIndex);
+            //}
 
             // Otherwise keep iterating through the older photos
             nextIndex = _currentImageIndex + 1;

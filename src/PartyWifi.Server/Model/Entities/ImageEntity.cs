@@ -14,8 +14,6 @@ namespace PartyWifi.Server.Model
 
         public string Identifier { get; set; }
 
-        public long Size { get; set; }
-
         public int ImageState { get; set; }
 
         public DateTime UploadDate { get; set; }

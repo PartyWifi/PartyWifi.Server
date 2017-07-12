@@ -27,7 +27,14 @@ If you distribute hardware, applications or services of the **PartyWifi** ecosys
 
 When you modifiy the code, please keep in mind, that **PartyWifi** and all other repositiries maintained by us are licensed under [GPL v3](blob/master/LICENSE) and therefor you are legally obligated to make your changes open source as well. This includes the clause that software installed on hardware sold or lent to customers must be replacable. 
 
-# Develop
+# Development
+
+## Dependencies
+- .NET Core 2.0
+- nodeJS > 8.x
+
+## Clone and Build
+
 ````
 // Clone the repository
 git clone git@github.com:dbeuchler/PartyWifi.Server.git
@@ -48,6 +55,3 @@ gulp default
 dotnet build
 dotnet run
 ````
-
-# MyGet Feed
-We use [ImageSharp](https://github.com/JimBobSquarePants/ImageSharp) that requires an additional nuget feed in NuGet.Config until they reach beta stage.

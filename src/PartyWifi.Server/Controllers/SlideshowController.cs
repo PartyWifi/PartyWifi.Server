@@ -29,7 +29,7 @@ namespace PartyWifi.Server.Controllers
         public IActionResult Next()
         {
             var next = _slideshowHandler.Next();
-            return Json(new SideshowImage(next.Id, _slideshowHandler.RotationMs));            
+            return Json(new SideshowImage(next.Identifier, _slideshowHandler.RotationMs));            
         }
     }
 }

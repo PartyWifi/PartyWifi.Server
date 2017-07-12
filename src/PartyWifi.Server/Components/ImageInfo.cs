@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
 
 namespace PartyWifi.Server.Components
@@ -10,28 +8,22 @@ namespace PartyWifi.Server.Components
     /// </summary>
     public class ImageInfo
     {
-        public const string InfoExtension = ".json";
-
         /// <summary>
         /// Prepare <see cref="ImageInfo" /> and initialize versions
         /// </summary>
-        public ImageInfo()
+        public ImageInfo(string identifier)
         {
+            Identifier = identifier;
             Versions = new List<ImageVersion>();
         }
 
         /// <summary>
         /// Unique id of the image
         /// </summary>
-        public string Id { get; set; }
+        public string Identifier { get; }
 
         /// <summary>
-        /// Size of the original
-        /// </summary>
-        public long Size { get; set; }
-
-        /// <summary>
-        /// Flag if image was approved for slideshow
+        /// Flag if image was approved
         /// </summary>
         public bool IsApproved => ImageState.HasFlag(ImageState.Approved);
 
@@ -39,6 +31,11 @@ namespace PartyWifi.Server.Components
         /// Flag if the image was deleted
         /// </summary>
         public bool IsDeleted => ImageState.HasFlag(ImageState.Deleted);
+
+        /// <summary>
+        /// Flag if the image was hidden
+        /// </summary>
+        public bool IsHidden => ImageState.HasFlag(ImageState.Hidden);
 
         /// <summary>
         /// Time-stamp of the image upload

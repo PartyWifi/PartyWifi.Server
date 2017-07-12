@@ -28,8 +28,6 @@ namespace PartyWifi.Server.Migrations
 
                     b.Property<int>("ImageState");
 
-                    b.Property<long>("Size");
-
                     b.Property<DateTime>("UploadDate");
 
                     b.HasKey("Id");
@@ -45,6 +43,8 @@ namespace PartyWifi.Server.Migrations
                     b.Property<string>("Hash");
 
                     b.Property<long?>("ImageEntityId");
+
+                    b.Property<long>("Size");
 
                     b.Property<int>("Version");
 

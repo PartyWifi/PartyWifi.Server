@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PartyWifi.Server.Model
 {
@@ -13,9 +14,9 @@ namespace PartyWifi.Server.Model
     {
         IQueryable<T> Linq { get; }
 
-        T GetByKey(long id);
+        Task<T> GetByKey(long id);
 
-        ICollection<T> GetAll();
+        Task<T[]> GetAll();
 
         T Create();
 

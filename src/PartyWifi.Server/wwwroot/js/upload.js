@@ -20,7 +20,7 @@ function ImageUpload(file) {
         data.append(self.file.name, self.file);
 
         $.ajax({
-            url: '/image/add',
+            url: '/images',
             type: 'POST',
             data: data,
             processData: false, 
