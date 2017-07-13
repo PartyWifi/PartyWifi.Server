@@ -39,6 +39,8 @@
             <tr>
                 <th>Bild</th>
                 <th class="hidden-sm-down">Datum</th>
+                <th>Actions</th>
+                
             </tr>
             </thead>
             <tbody data-bind="foreach: { data: images, afterRender: imagesUpdated }">
@@ -48,7 +50,24 @@
                         <img width="155" data-bind="attr: {src: '/api/images/' + identifier + '/thumbnail'}" />
                     </a>
                 </td>
-                <td class="hidden-sm-down" data-bind="text: uploadDate"></td>
+                <td class="hidden-sm-down" data-bind="text: moment(uploadDate).format('LLL') "></td>
+               
+                <td>
+                    <a class="btn btn-primary" target="_blank" href="#" data-bind="attr: {href: '/api/images/' + identifier + '/original'}" download>
+                        <i class="fa fa-download"></i>
+                    </a>
+                    @{
+                    if (ViewBag.IsAuthorized)
+                    {
+                        <button class="btn btn-info">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                        <button class="btn btn-danger" data-bind="click: $parent.remove, enable: isDeleted() == false">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                        }
+                    }
+                </td>
             </tr>
             </tbody>
         </table>

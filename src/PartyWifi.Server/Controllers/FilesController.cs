@@ -6,6 +6,8 @@ namespace PartyWifi.Server.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.IsAuthorized = true;
+
             return View();
         }
     }

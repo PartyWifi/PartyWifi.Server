@@ -23,8 +23,7 @@ namespace PartyWifi.Server.Components
         /// <summary>
         /// Returns the number of managed images 
         /// </summary>
-        /// <returns></returns>
-        int ImageCount();
+        int ImageCount { get; }
 
         /// <summary>
         /// Get image by identifier

@@ -1,7 +1,16 @@
+function ImageViewModel(image) {
+    var self = this;
+    var model = image;
+
+    self.identifier = model.identifier;
+    self.isDeleted = ko.observable(model.isDeleted);
+    self.uploadDate = new Date(Date.parse(model.uploadDate));
+}
+
 function ImageListViewModel() {
     var self = this;
 
-    self.availablePageSizes = [5, 10, 20];
+    self.availablePageSizes = [5, 10, 20, 40, 100];
 
     self.maxPerPage = ko.observable(5);
     self.currentPage = ko.observable(1);
@@ -16,8 +25,11 @@ function ImageListViewModel() {
             })
             .done(function(data) {
                 self.totalPages(Math.ceil(data.total / self.maxPerPage()));
-                self.images(data.images);
-                
+
+                ko.utils.arrayForEach(data.images,
+                    function(image) {
+                        self.images.push(new ImageViewModel(image));
+                    });
             });
     }
 
@@ -57,6 +69,18 @@ function ImageListViewModel() {
     self.prev = function () {
         changePage(self.currentPage() - 1);
     }
+
+    // Remove an image
+    self.remove = function (image) {
+        $.ajax({
+                url: '/api/images/' + image.identifier,
+                type: 'DELETE'
+            })
+            .done(function(data) {
+                image.isDeleted(true);
+            });
+    }
+
 
     // Initial load of images
     load(0);

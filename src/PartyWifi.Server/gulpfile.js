@@ -8,13 +8,13 @@ var uglify = require('gulp-uglify');
 gulp.task('less-partywifi', function() {
     return gulp.src('wwwroot/less/partywifi.less')
         .pipe(less())
-        .pipe(gulp.dest('wwwroot/css'))
+        .pipe(gulp.dest('wwwroot/css'));
 });
 
 gulp.task('less-slideshow', function() {
     return gulp.src('wwwroot/less/slideshow.less')
         .pipe(less())
-        .pipe(gulp.dest('wwwroot/css'))
+        .pipe(gulp.dest('wwwroot/css'));
 });
 
 gulp.task('less', ['less-partywifi', 'less-slideshow']);
@@ -24,7 +24,7 @@ gulp.task('minify-css', ['less'], function() {
     return gulp.src(['wwwroot/css/*.css', '!wwwroot/css/*.min.css'])
         .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('wwwroot/css'))
+        .pipe(gulp.dest('wwwroot/css'));
 });
 
 // Minify JS
@@ -32,28 +32,32 @@ gulp.task('minify-js', function() {
     return gulp.src(['wwwroot/js/*.js', '!wwwroot/js/*.min.js'])
         .pipe(uglify())
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('wwwroot/js'))
+        .pipe(gulp.dest('wwwroot/js'));
 });
 
 // Copy libraries from /node_modules into wwwroot/lib/
 gulp.task('copy', function() {
     gulp.src(['node_modules/bootstrap/dist/**/*', '!**/npm.js', '!**/bootstrap-*', '!**/*.map'])
-        .pipe(gulp.dest('wwwroot/lib/bootstrap'))
+        .pipe(gulp.dest('wwwroot/lib/bootstrap'));
 
     gulp.src(['node_modules/tether/dist/**/*'])
-        .pipe(gulp.dest('wwwroot/lib/tether'))
+        .pipe(gulp.dest('wwwroot/lib/tether'));
 
     gulp.src(['node_modules/jquery/dist/jquery.min.js'])
-        .pipe(gulp.dest('wwwroot/lib/jquery'))
+        .pipe(gulp.dest('wwwroot/lib/jquery'));
 
     gulp.src(['node_modules/magnific-popup/dist/*'])
-        .pipe(gulp.dest('wwwroot/lib/magnific-popup'))
+        .pipe(gulp.dest('wwwroot/lib/magnific-popup'));
 
     gulp.src(['node_modules/knockout/build/output/knockout-latest.js'])
-        .pipe(gulp.dest('wwwroot/lib/knockout'))
+        .pipe(gulp.dest('wwwroot/lib/knockout'));
 
     gulp.src(['node_modules/animate.css/animate.min.css'])
-        .pipe(gulp.dest('wwwroot/lib/animate.css'))
+        .pipe(gulp.dest('wwwroot/lib/animate.css'));
+
+    gulp.src(['node_modules/moment/min/moment.min.js'])
+        .pipe(gulp.dest('wwwroot/lib/moment'));
+
 
     gulp.src([
         'node_modules/font-awesome/**',
@@ -63,9 +67,8 @@ gulp.task('copy', function() {
         '!node_modules/font-awesome/*.md',
         '!node_modules/font-awesome/*.json'
     ])
-    .pipe(gulp.dest('wwwroot/lib/font-awesome'))
-
-})
+    .pipe(gulp.dest('wwwroot/lib/font-awesome'));
+});
 
 // Run everything
 gulp.task('default', ['less', 'minify-css', 'minify-js', 'copy']);

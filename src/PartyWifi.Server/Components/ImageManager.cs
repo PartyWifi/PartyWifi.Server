@@ -52,16 +52,7 @@ namespace PartyWifi.Server.Components
             return result;
         }
 
-        public int ImageCount()
-        {
-            _imageLock.EnterReadLock();
-
-            var result = _images.Count();
-
-            _imageLock.ExitReadLock();
-
-            return result;
-        }
+        public int ImageCount => _images.Count;
 
         public ImageInfo GetByIdentifier(string identifier)
         {
@@ -78,7 +69,7 @@ namespace PartyWifi.Server.Components
         {
             _imageLock.EnterReadLock();
 
-            var result = _images.Skip(start).Take(limit).ToArray();
+            var result = _images.OrderByDescending(i => i.UploadDate).Skip(start).Take(limit).ToArray();
 
             _imageLock.ExitReadLock();
 
@@ -242,7 +233,7 @@ namespace PartyWifi.Server.Components
             _imageLock.EnterReadLock();
 
             // Delete from list
-            var info = _images.First(i => i.Identifier == identifier);
+            var info = _images.Single(i => i.Identifier == identifier);
             info.ImageState |= ImageState.Deleted;
 
             // Update database

@@ -30,7 +30,7 @@ namespace PartyWifi.Server.Controllers
             if (limit == 0)
                 limit = 10;
 
-            var total = _manager.ImageCount();
+            var total = _manager.ImageCount;
             var images = _manager.GetRange(offset, limit).Select(ImageEntrySelector<ImageEntryResponse>).ToArray();
 
             var result = new ImageListResponse
