@@ -7,6 +7,7 @@ using PartyWifi.Server.Models;
 
 namespace PartyWifi.Server.Controllers
 {
+    [Route("api/[controller]")]
     public class ImagesController : Controller
     {
         private readonly IImageManager _manager;
@@ -23,7 +24,7 @@ namespace PartyWifi.Server.Controllers
         /// <summary>
         /// GET: /images?offset=2
         /// </summary>
-        [HttpGet, Route("[controller]")]
+        [HttpGet, Route("")]
         public IActionResult List([FromQuery]int offset, [FromQuery]int limit)
         {
             if (limit == 0)
@@ -47,30 +48,31 @@ namespace PartyWifi.Server.Controllers
         /// Creates a new image from the posted form file
         /// POST: images/ (multipart)
         /// </summary>
-        [HttpPost, Route("[controller]")]
+        [HttpPost, Route("")]
         public async Task<IActionResult> Create()
         {
-            var files = Request.Form.Files;
-            foreach (var file in files)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    // Copy to memory first
-                    await file.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0;
+            var file = Request.Form.Files.SingleOrDefault();
+            if (file == null)
+                return BadRequest();
 
-                    await _manager.Add(memoryStream);
-                }
+            ImageInfo info;
+            using (var memoryStream = new MemoryStream())
+            {
+                // Copy to memory first
+                await file.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+
+                info = await _manager.Add(memoryStream);
             }
 
-            return Ok();
+            return CreatedAtRoute(nameof(Read), new {identifier = info.Identifier}, info);
         }
 
         /// <summary>
         /// Reads a image by the identifier
         /// GET: images/{identifier}
         /// </summary>
-        [HttpGet, Route("[controller]/{identifier}")]
+        [HttpGet, Route("{identifier}", Name = nameof(Read))]
         public IActionResult Read(string identifier)
         {
             var info = _manager.GetByIdentifier(identifier);
@@ -88,7 +90,7 @@ namespace PartyWifi.Server.Controllers
             return Json(imageInfo);
         }
 
-        [HttpDelete, Route("[controller]/{identifier}")]
+        [HttpDelete, Route("{identifier}")]
         public async Task<IActionResult> Delete(string identifier)
         {
             await _manager.Delete(identifier);
@@ -98,7 +100,7 @@ namespace PartyWifi.Server.Controllers
         /// <summary>
         /// Load special version of an image
         /// </summary>
-        [HttpGet, Route("[controller]/{identifier}/{version}")]
+        [HttpGet, Route("{identifier}/{version}")]
         public IActionResult Load(ImageVersions version, string identifier)
         {
             var image = _manager.GetByIdentifier(identifier);

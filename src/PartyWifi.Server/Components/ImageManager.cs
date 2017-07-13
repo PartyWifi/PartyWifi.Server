@@ -234,7 +234,7 @@ namespace PartyWifi.Server.Components
             var fileName = hash.Substring(2);
             var path = Path.Combine(_settings.Directory, ImageDirectory, subdir, fileName);
             
-            return new FileStream(path, FileMode.Open);
+            return File.OpenRead(path);
         }
 
         public async Task Delete(string identifier)

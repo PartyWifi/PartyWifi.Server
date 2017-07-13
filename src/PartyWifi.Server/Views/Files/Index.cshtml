@@ -1,33 +1,56 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Rendering
-@model PartyWifi.Server.Models.FileList
 
 @{
-    ViewBag.Title = "Datei-Liste";
+    ViewBag.Title = "Bilder";
     Layout = "_Layout";
+}
+
+@section scripts {
+    <environment names="Development">
+        <script src="~/js/imageList.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/imageList.min.js"></script>
+    </environment>
 }
 
 <h2>@ViewData["Title"]</h2>
 
-@Html.Partial("Pagination", Model)
+<select class="custom-select mb-2 mr-sm-2 mb-sm-0" data-bind="options: availablePageSizes, value: maxPerPage"></select>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Bild</th>
-        <th class="hidden-sm-down">Name</th>
-        <th>Größe</th>
-        <th class="hidden-sm-down">Datum</th>
-        <th>Download</th>
-    </tr>
-    </thead>
-    <tbody>
-        @{
-            foreach (var file in Model.Files)
-            {
-                @Html.Partial("FileEntry", file)
-            }
-        }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" data-bind="css: { disabled: canPrev() == false }">
+                <a class="page-link" href="#" data-bind="click: prev">Zurück</a>
+            </li>
+            <li class="page-item active"><span class="page-link" data-bind="text: currentPage()">1</span></li>
+            <li class="page-item" data-bind="css: { disabled: canNext() == false }">
+                <a class="page-link" href="#" data-bind="click: next">Vor</a>
+            </li>
+        </ul>
+    </div>
+</div>
 
-@Html.Partial("Pagination", Model)
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Bild</th>
+                <th class="hidden-sm-down">Datum</th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: { data: images, afterRender: imagesUpdated }">
+            <tr>
+                <td>
+                    <a class="image-link" data-bind="attr: {href: '/api/images/' + identifier + '/original'}">
+                        <img width="155" data-bind="attr: {src: '/api/images/' + identifier + '/thumbnail'}" />
+                    </a>
+                </td>
+                <td class="hidden-sm-down" data-bind="text: uploadDate"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -14,13 +14,13 @@ function ImageUpload(file) {
         reader.readAsDataURL(file);
     }
 
-    self.upload = function(successCallback, failureCallback, alwaysCallback) {
+    self.upload = function (successCallback, failureCallback, alwaysCallback) {
         self.isUploading(true);
         var data = new FormData();
         data.append(self.file.name, self.file);
 
         $.ajax({
-            url: '/images',
+            url: '/api/images',
             type: 'POST',
             data: data,
             processData: false, 
