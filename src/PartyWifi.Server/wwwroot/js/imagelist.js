@@ -10,77 +10,61 @@ function ImageViewModel(image) {
 function ImageListViewModel() {
     var self = this;
 
-    self.availablePageSizes = [5, 10, 20, 40, 100];
-
-    self.maxPerPage = ko.observable(5);
-    self.currentPage = ko.observable(1);
-    self.totalPages = ko.observable(1);
-
+    var maxPerLoad = 10;
+    var totalImages = 0;
+    self.isLoading = ko.observable(false);
     self.images = ko.observableArray();
 
-    var load = function (offset) {
+    var load = function (offset, callback) {
         $.ajax({
-                url: '/api/images?limit=' + self.maxPerPage() + '&offset=' + offset,
-                type: 'GET'
-            })
-            .done(function(data) {
-                self.totalPages(Math.ceil(data.total / self.maxPerPage()));
-
-                ko.utils.arrayForEach(data.images,
-                    function(image) {
-                        self.images.push(new ImageViewModel(image));
-                    });
-            });
+            url: '/api/images?limit=' + maxPerLoad + '&offset=' + offset,
+            type: 'GET'
+        }).done(function(data) {
+            totalImages = data.total;
+            ko.utils.arrayForEach(data.images,
+                function(image) {
+                    self.images.push(new ImageViewModel(image));
+                });
+        }).fail(function() {
+            //TODO: error handling
+        }).always(function() {
+            if (callback)
+                callback();
+        });
     }
-
-    // changes the page to the given next one
-    var changePage = function (next) {
-        self.images([]);
-        self.currentPage(next);
-        load((next * self.maxPerPage()) - self.maxPerPage());
-    };
-
-    // subscribe to combo box change of max images per page
-    self.maxPerPage.subscribe(function () {
-        self.currentPage(1);
-        self.totalPages(1);
-        self.images([]);
-        load(0);
-    });
 
     self.imagesUpdated = function() {
         partyWifi.applyMagnificPopup();
     }
 
-    // Checks if there is a next page
-    self.canNext = ko.computed(function () {
-        return (self.currentPage() + 1) <= self.totalPages();
-    }, this);
-
-    self.next = function () {
-        changePage(self.currentPage() + 1);
-    }
-
-    // Checks if there is a previous page
-    self.canPrev = ko.computed(function () {
-        return (self.currentPage() - 1) > 0;
-    }, this);
-
-    self.prev = function () {
-        changePage(self.currentPage() - 1);
-    }
-
     // Remove an image
     self.remove = function (image) {
         $.ajax({
-                url: '/api/images/' + image.identifier,
-                type: 'DELETE'
-            })
-            .done(function(data) {
-                image.isDeleted(true);
-            });
+            url: '/api/images/' + image.identifier,
+            type: 'DELETE'
+        }).done(function(data) {
+            image.isDeleted(true);
+        }).fail(function() {
+            //TODO: error handling
+        });
     }
 
+    // Load more images on scroll down
+    $(window).scroll(function () {
+        var currentImageCount = self.images().length;;
+        if (totalImages == currentImageCount)
+            return;
+
+        if (!self.isLoading() && ($(window).scrollTop() > $(document).height() - $(window).height() - 100)) {
+            self.isLoading(true);
+
+            // offset are the current count of images
+            load(currentImageCount, function () {
+                // reset value of loading once content loaded
+                self.isLoading(false);
+            });
+        }
+    });
 
     // Initial load of images
     load(0);
