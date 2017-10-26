@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
-using ImageSharp;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Threading;
 using PartyWifi.Server.Model;
+using SixLabors.ImageSharp;
 
 namespace PartyWifi.Server.Components
 {
@@ -181,7 +181,7 @@ namespace PartyWifi.Server.Components
                     return;
                 }
 
-                image.AutoOrient();
+                image.Mutate(x => x.AutoOrient());
                 SaveAndReuseStream(memoryStream, image);
             }
         }
@@ -211,7 +211,7 @@ namespace PartyWifi.Server.Components
                 var newWidth = (int)Math.Floor(image.Width / scaling);
                 var newHeight = (int)Math.Floor(image.Height / scaling);
 
-                image.Resize(newWidth, newHeight);
+                image.Mutate(x => x.Resize(newWidth, newHeight));
 
                 SaveAndReuseStream(memoryStream, image);
 
